@@ -20,6 +20,8 @@ import static spark.Spark.*;
 public enum WebSocket {
     INSTANCE;
 
+    public static final String WEB_SOCKET_ROUTE = "/play/socket";
+
     public Logger logger = LoggerFactory.getLogger(WebSocket.class);
 
     @Getter
@@ -27,15 +29,15 @@ public enum WebSocket {
 
     @OnWebSocketConnect
     public void onConnect(Session session) {
-        logger.debug("Session connected from " + session.getRemoteAddress().getAddress().getHostAddress());
+        logger.info("Session connected from " + session.getRemoteAddress().getAddress().getHostAddress());
         synchronized (sessions) {
             sessions.add(session);
         }
     }
 
     @OnWebSocketClose
-    public void onDisconnect(Session session) {
-        logger.debug("Session to " + session.getRemoteAddress().getAddress().getHostAddress() + " closed");
+    public void onDisconnect(Session session, int statusCode, String reason) {
+        logger.info("Session to " + session.getRemoteAddress().getAddress().getHostAddress() + " closed for reason: " + reason);
         synchronized (sessions) {
             sessions.remove(session);
         }
@@ -54,6 +56,6 @@ public enum WebSocket {
     }
 
     public static void init() {
-        webSocket("/play/websocket", WebSocket.INSTANCE);
+        webSocket(WEB_SOCKET_ROUTE, WebSocket.INSTANCE);
     }
 }
