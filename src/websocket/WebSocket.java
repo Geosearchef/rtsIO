@@ -1,10 +1,14 @@
 package websocket;
 
+import de.geosearchef.rtsIO.game.Game;
 import lombok.Getter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +37,7 @@ public enum WebSocket {
         synchronized (sessions) {
             sessions.add(session);
         }
+
     }
 
     @OnWebSocketClose
@@ -45,8 +50,21 @@ public enum WebSocket {
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) {
-        //TODO: login from player
+    public void onMessage(Session session, String msg) {
+        JSONObject message = null;
+        try {
+             message = (JSONObject) new JSONParser().parse(msg);
+        } catch (ParseException e) {logger.warn("Could not parse websocket message!", e);return;}
+        System.out.println(msg);
+        switch((String)message.get("type")) {
+
+            case "login": {
+                Game.attemptLogin((String)message.get("username"), (String)message.get("token"), session);
+                break;
+            }
+
+        }
+        //TODO: login from player, send username
         //TODO: interpret
     }
 

@@ -16,8 +16,9 @@ public class Api {
             String username = req.queryParams("username");
             if(username != null && !username.equals("") && !Game.isUsernameInUse(username)) {
                 if(SpamPrevention.isValid(req.ip())) {
-                    Game.logon(username);
-                    res.redirect("play/play.html");
+                    String token = username.hashCode() + "_" + (int)(Math.random() * 1000000000);
+                    Game.userConnected(username, token);
+                    res.redirect("play/play.html?username=" + username + "&token=" + token);
                 } else {
                     return "Please stop spamming!";
                 }
