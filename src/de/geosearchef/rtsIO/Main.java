@@ -1,7 +1,7 @@
 package de.geosearchef.rtsIO;
 
 import de.geosearchef.rtsIO.api.Api;
-import websocket.WebSocket;
+import de.geosearchef.rtsIO.websocket.WebSocket;
 
 import static spark.Spark.*;
 

@@ -1,6 +1,7 @@
-package websocket;
+package de.geosearchef.rtsIO.websocket;
 
 import de.geosearchef.rtsIO.game.Game;
+import de.geosearchef.rtsIO.game.Player;
 import lombok.Getter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -15,7 +16,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import static spark.Spark.*;
 
@@ -25,8 +29,9 @@ public enum WebSocket {
     INSTANCE;
 
     public static final String WEB_SOCKET_ROUTE = "/play/socket";
+    public static final int SOCKET_IDLE_TIMEOUT = 120 * 1000;//2 mins
 
-    public Logger logger = LoggerFactory.getLogger(WebSocket.class);
+    private Logger logger = LoggerFactory.getLogger(WebSocket.class);
 
     @Getter
     private Set<Session> sessions = new HashSet<Session>();
@@ -37,7 +42,7 @@ public enum WebSocket {
         synchronized (sessions) {
             sessions.add(session);
         }
-
+        session.setIdleTimeout(SOCKET_IDLE_TIMEOUT);
     }
 
     @OnWebSocketClose
@@ -46,31 +51,46 @@ public enum WebSocket {
         synchronized (sessions) {
             sessions.remove(session);
         }
-        //TODO: inform game
+        Game.sessionClosed(session);
     }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) {
-        JSONObject message = null;
         try {
-             message = (JSONObject) new JSONParser().parse(msg);
-        } catch (ParseException e) {logger.warn("Could not parse websocket message!", e);return;}
-        System.out.println(msg);
-        switch((String)message.get("type")) {
+            final JSONObject message = (JSONObject) new JSONParser().parse(msg);
+            System.out.println(msg);
 
-            case "login": {
-                Game.attemptLogin((String)message.get("username"), (String)message.get("token"), session);
-                break;
+            if (Objects.equals((String) message.get("type"), "login")) {
+                //Login
+                try {
+                    Game.attemptLogin((String) message.get("username"), (String) message.get("token"), session);
+                } catch (Exception e) {
+                    redirectToLoginPage(session);
+                }
+            } else {
+                //Default message parsing
+                Optional<Player> player = Game.getPlayerBySession(session);
+                player.ifPresent(p -> CompletableFuture.runAsync(() -> p.onMessage(message)));
             }
 
+        } catch (ParseException e) {
+            logger.warn("Could not parse websocket message!", e);
+            return;
         }
-        //TODO: login from player, send username
-        //TODO: interpret
     }
 
     public void send(Session session, String message) throws IOException {
-        if (session.isOpen())
-            session.getRemote().sendStringByFuture(message);
+//        if (session.isOpen())
+        session.getRemote().sendStringByFuture(message);
+    }
+
+    public void redirectToLoginPage(Session session) {
+        logger.info("Redirecting user to login");
+        try {
+            send(session, "{type:\"loginFailed\"}");//TODO: fix this, seems to be not working
+        } catch (IOException e) {
+            logger.warn("Error while sending user back to login.", e);
+        }
     }
 
     public static void init() {

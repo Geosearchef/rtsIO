@@ -3,6 +3,7 @@ window.onload = init;
 
 var connected = false;
 var username;
+var playerID;
 var socket;
 
 function onMessage(event) {
@@ -10,10 +11,15 @@ function onMessage(event) {
     alert(event.data);
 
     switch (msg.type) {
+        case "loginFailed":
+            window.location.href = "/";
+            connected = false;
+            break;
         case "loginSuccess":
             username = msg.username;
+            playerID = msg.id;
             connected = true;
-            alert("Received username " + username)
+            alert("Received username " + username);
             break;
         //TODO: Redirect back to main page
     }

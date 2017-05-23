@@ -1,11 +1,13 @@
 package de.geosearchef.rtsIO.game;
 
+import de.geosearchef.rtsIO.json.LoginSuccessMessage;
+import de.geosearchef.rtsIO.json.Message;
 import lombok.Getter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import websocket.WebSocket;
+import de.geosearchef.rtsIO.websocket.WebSocket;
 
 import java.io.IOException;
 
@@ -18,9 +20,9 @@ public class Player {
     @Getter private final long loginTime;
     @Getter private final String username;
     @Getter private final String loginToken;
-    @Getter private boolean connected;
+    @Getter private boolean connected;//needs to be logged in, else false
 
-    private Session session;
+    @Getter private Session session;
 
     public Player(int id, String username, String loginToken) {
         this.id = id;
@@ -29,10 +31,28 @@ public class Player {
         this.loginTime = System.currentTimeMillis();
     }
 
+    public void onMessage(JSONObject message) {
+        //todo: process
+        switch((String)message.get("type")) {
+
+            case "whatever": {
+
+
+                break;
+            }
+
+        }
+    }
+
 
     public void login(String token, Session session) {
-        if(! token.equals(this.loginToken))
+        if(! token.equals(this.loginToken)) {
+            WebSocket.INSTANCE.redirectToLoginPage(session);
+            synchronized (Game.connectingPlayers) {
+                Game.connectingPlayers.remove(this);
+            }
             return;
+        }
 
         connected = true;
         this.session = session;
@@ -43,12 +63,19 @@ public class Player {
             Game.connectingPlayers.remove(this);
         }
 
-        JSONObject loginSuccessMessage = new JSONObject();
-        loginSuccessMessage.put("type", "loginSuccess");
-        loginSuccessMessage.put("username", this.username);
-        this.send(loginSuccessMessage);
+        this.send(new LoginSuccessMessage(this.username, this.id));
+
+        //Send game information to new connecting player
+
+        //Send all players to this player
+        synchronized (Game.players) {
+            Game.players.forEach(p -> this.send(p.constructConnectMessage()));
+        }
+
+        logger.info("User " + this.username + " connected");
     }
 
+    public void send(Message message) {send(message.toJson());}
     public void send(JSONObject message) {send(message.toJSONString());}
     public void send(String message) {
         if(!this.isConnected())
@@ -57,6 +84,18 @@ public class Player {
         try {
             WebSocket.INSTANCE.send(this.session, message);
         } catch(IOException e) {logger.warn("Could not send message to player: " + message, e);}
+    }
+
+    public JSONObject constructConnectMessage() {
+        JSONObject connectMessage = new JSONObject();
+        connectMessage.put("type", "playerConnect");
+        connectMessage.put("id", getId());
+        connectMessage.put("username", getUsername());
+        return connectMessage;
+    }
+
+    public boolean isLoggedIn() {
+        return isConnected();
     }
 
     public boolean loginTimedOut() {//TODO: login timeout,  scheduled event instead
