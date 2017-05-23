@@ -1,16 +1,17 @@
-import api.Api;
+package de.geosearchef.rtsIO;
+
+import de.geosearchef.rtsIO.api.Api;
+import websocket.WebSocket;
 
 import static spark.Spark.*;
 
-/**
- * Created by Geosearchef on 22.05.2017.
- */
 public class Main {
 
     public static void main(String args[]) {
 
         staticFiles.externalLocation("public/");
 
+        WebSocket.init();
         Api.init();
 
     }

@@ -1,12 +1,9 @@
-package api;
+package de.geosearchef.rtsIO.api;
 
-import game.Game;
+import de.geosearchef.rtsIO.game.Game;
 
 import static spark.Spark.*;
 
-/**
- * Created by Geosearchef on 22.05.2017.
- */
 public class Api {
 
 
@@ -17,7 +14,7 @@ public class Api {
 
         get("/start", (req, res) -> {
             String username = req.queryParams("username");
-            if(username != null && !username.equals("")) {
+            if(username != null && !username.equals("") && !Game.isUsernameInUse(username)) {
                 if(SpamPrevention.isValid(req.ip())) {
                     Game.logon(username);
                     res.redirect("play/play.html");
