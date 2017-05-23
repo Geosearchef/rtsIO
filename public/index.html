@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>rtsIO prototype</title>
+    <style>
+        br
+        {
+            content: " " !important;
+            display: block !important;
+            margin:5px;
+        }
+    </style>
+
+    <script language="JavaScript">
+
+        window.onload = init;
+
+        function init() {
+            document.getElementById("usernameField").value = "User" + (new Date().getTime()+"").split("").reverse().join("").substring(0, 8);
+        }
+    </script>
+
+</head>
+<body>
+
+    <form action="/start" method="get">
+        Username:<br>
+        <input type="text" name="username" id="usernameField"><br>
+        <input type="submit">
+    </form>
+
+</body>
+</html>
