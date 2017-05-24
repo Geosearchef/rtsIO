@@ -74,7 +74,7 @@ public class Game {
 
     public static void sessionClosed(Session session) {
         synchronized (players) {
-            playerDisconnected(players.stream().filter(p -> p.getSession().equals(session)).findAny().orElse(null));
+            players.stream().filter(p -> p.getSession().equals(session)).findAny().ifPresent(p -> playerDisconnected(p));
         }
     }
 

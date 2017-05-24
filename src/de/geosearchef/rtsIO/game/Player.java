@@ -10,11 +10,15 @@ import org.slf4j.LoggerFactory;
 import de.geosearchef.rtsIO.websocket.WebSocket;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Player {
 
-    private static final int CONNECT_TIME_OUT = 10000;//name reserve time
+    private static final int LOGIN_TIME_OUT = 10 * 1000;//name reserve time
     private static final Logger logger = LoggerFactory.getLogger(Player.class);
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
 
     @Getter private final int id;
     @Getter private final long loginTime;
@@ -29,10 +33,12 @@ public class Player {
         this.username = username;
         this.loginToken = loginToken;
         this.loginTime = System.currentTimeMillis();
+
+        scheduleLoginTimeout();
     }
 
     public void onMessage(JSONObject message) {
-        //todo: process
+        //TODO: process
         switch((String)message.get("type")) {
 
             case "whatever": {
@@ -99,7 +105,19 @@ public class Player {
         return isConnected();
     }
 
-    public boolean loginTimedOut() {//TODO: login timeout,  scheduled event instead
-        return !this.isConnected() && (System.currentTimeMillis() - this.loginTime) >= CONNECT_TIME_OUT;
+
+
+    public void scheduleLoginTimeout() {
+        scheduler.schedule(this::checkLoginTimeout, LOGIN_TIME_OUT, TimeUnit.MILLISECONDS);
+    }
+
+    //checks if the player logged in and if not frees the name reservation
+    public void checkLoginTimeout() {
+        synchronized (Game.connectingPlayers) {
+            if(!this.isConnected() && Game.connectingPlayers.contains(this)) {
+                logger.info("Player " + username + ": login timed out");
+                Game.connectingPlayers.remove(this);
+            }
+        }
     }
 }

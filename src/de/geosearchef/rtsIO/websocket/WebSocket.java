@@ -86,11 +86,11 @@ public enum WebSocket {
 
 
     //used when user tries to login with an invalid username or token or something else bad happen
-    //TODO: not working!
     public void redirectToLoginPage(Session session) {
         logger.info("Redirecting user to login");
         try {
             send(session, "{type:\"loginFailed\"}");
+            session.close();
         } catch (IOException e) {
             logger.warn("Error while sending user back to login.", e);
         }

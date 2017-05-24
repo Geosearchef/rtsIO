@@ -11,24 +11,31 @@
             margin:5px;
         }
     </style>
-
-    <script language="JavaScript">
-
-        window.onload = init;
-
-        function init() {
-            document.getElementById("usernameField").value = "User" + (new Date().getTime()+"").split("").reverse().join("").substring(0, 8);
-        }
-    </script>
-
+    <script src="play/util.js"></script>
 </head>
 <body>
+    <span style="color:#e43200">
+        <script language="JavaScript">
+            if(getParameterByName("connectionLost") == 'true')
+                document.write("Sorry, but it seems like we've lost connection to the game server!<br>");
+        </script>
+    </span>
 
     <form action="/start" method="get">
         Username:<br>
         <input type="text" name="username" id="usernameField"><br>
         <input type="submit">
     </form>
+
+
+
+    <script language="JavaScript">
+        window.onload = init;
+
+        function init() {
+            document.getElementById("usernameField").value = "User" + (new Date().getTime()+"").split("").reverse().join("").substring(0, 8);
+        }
+    </script>
 
 </body>
 </html>
