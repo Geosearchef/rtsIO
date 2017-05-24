@@ -34,7 +34,7 @@ function init() {
     socket = new WebSocket("ws://" + window.location.hostname + ":" + location.port + "/play/socket");
     socket.onopen = function () {
         //Attempt login on server using username and token
-        var loginMessage = {type: "login", username: getParameterByName("username"), token : getParameterByName("token")};
+        var loginMessage = {type: "login", username: Util.getParameterByName("username"), token : Util.getParameterByName("token")};
         send(loginMessage);
     }
     socket.onmessage = onMessage;

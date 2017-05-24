@@ -2,6 +2,7 @@ package de.geosearchef.rtsIO.game;
 
 import de.geosearchef.rtsIO.json.LoginSuccessMessage;
 import de.geosearchef.rtsIO.json.Message;
+import de.geosearchef.rtsIO.json.PlayerConnectMessage;
 import lombok.Getter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.simple.JSONObject;
@@ -75,7 +76,7 @@ public class Player {
 
         //Send all players to this player
         synchronized (Game.players) {
-            Game.players.forEach(p -> this.send(p.constructConnectMessage()));
+            Game.players.forEach(p -> this.send(new PlayerConnectMessage(p.getId(), p.getUsername())));
         }
 
         logger.info("User " + this.username + " connected");
@@ -92,14 +93,6 @@ public class Player {
         } catch(IOException e) {logger.warn("Could not send message to player: " + message, e);}
     }
 
-    //constructs a message that is broadcasted on the connect of this player
-    public JSONObject constructConnectMessage() {
-        JSONObject connectMessage = new JSONObject();
-        connectMessage.put("type", "playerConnect");
-        connectMessage.put("id", getId());
-        connectMessage.put("username", getUsername());
-        return connectMessage;
-    }
 
     public boolean isLoggedIn() {
         return isConnected();

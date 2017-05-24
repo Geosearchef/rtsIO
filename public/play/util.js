@@ -1,7 +1,9 @@
+var Util = {};
+
 
 //TODO: rewrite
 //returns a URL parameter
-function getParameterByName(name, url) {
+Util.getParameterByName = function (name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),

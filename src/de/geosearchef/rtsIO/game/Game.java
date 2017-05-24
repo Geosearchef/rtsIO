@@ -2,6 +2,8 @@ package de.geosearchef.rtsIO.game;
 
 import de.geosearchef.rtsIO.IDFactory;
 import de.geosearchef.rtsIO.json.Message;
+import de.geosearchef.rtsIO.json.PlayerConnectMessage;
+import de.geosearchef.rtsIO.json.PlayerDisconnectMessage;
 import lombok.NonNull;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.simple.JSONObject;
@@ -39,7 +41,7 @@ public class Game {
             player.get().login(token, session);
             if (player.get().isLoggedIn()) {
                 //Broadcast logged in player to other players (including the player itself) TODO: loggin in player is contained 2 times????
-                broadcastPlayers(player.get().constructConnectMessage());
+                broadcastPlayers(new PlayerConnectMessage(player.get().getId(), player.get().getUsername()));
             }
         } else {
             //Wrong username, token or timed out
@@ -66,10 +68,7 @@ public class Game {
         }
 
         logger.info(player.getUsername() + " disconnected");
-        JSONObject disconnectMessage = new JSONObject();
-        disconnectMessage.put("type", "playerDisconnect");
-        disconnectMessage.put("id", player.getId());
-        broadcastPlayers(disconnectMessage);
+        broadcastPlayers(new PlayerDisconnectMessage(player.getId()));
     }
 
     public static void sessionClosed(Session session) {
