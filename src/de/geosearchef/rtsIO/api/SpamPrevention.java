@@ -18,6 +18,10 @@ public class SpamPrevention {
 
     private static Map<String, Integer> attempts = new HashMap<String, Integer>();
 
+    /**
+     * used for preventing spam, counts IP on call
+     * @return false if the user sent more then MAX_REQUESTS_PER_INTERVAL since the last chache clear, else false
+     */
     public static boolean isValid(String ip) {
         synchronized (attempts) {
             int old = attempts.containsKey(ip) ? attempts.get(ip) : 0;
@@ -27,6 +31,7 @@ public class SpamPrevention {
     }
 
     static {
+        //Thread for clearing cache every SPAM_CACHE_CLEAR_INTERVAL ms
         new Thread(() -> {
             while (true) {
                 try {

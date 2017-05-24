@@ -26,7 +26,7 @@ import static spark.Spark.*;
 
 @org.eclipse.jetty.websocket.api.annotations.WebSocket
 public enum WebSocket {
-    INSTANCE;
+    INSTANCE; //Singleton
 
     public static final String WEB_SOCKET_ROUTE = "/play/socket";
     public static final int SOCKET_IDLE_TIMEOUT = 120 * 1000;//2 mins
@@ -80,14 +80,17 @@ public enum WebSocket {
     }
 
     public void send(Session session, String message) throws IOException {
-//        if (session.isOpen())
-        session.getRemote().sendStringByFuture(message);
+        if (session.isOpen())
+            session.getRemote().sendStringByFuture(message);
     }
 
+
+    //used when user tries to login with an invalid username or token or something else bad happen
+    //TODO: not working!
     public void redirectToLoginPage(Session session) {
         logger.info("Redirecting user to login");
         try {
-            send(session, "{type:\"loginFailed\"}");//TODO: fix this, seems to be not working
+            send(session, "{type:\"loginFailed\"}");
         } catch (IOException e) {
             logger.warn("Error while sending user back to login.", e);
         }

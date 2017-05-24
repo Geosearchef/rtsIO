@@ -6,12 +6,14 @@ import static spark.Spark.*;
 
 public class Api {
 
-
-
+    /**
+     * Defines routes (http)
+     */
     public static void init() {
 
         //Spam prevention via before?
 
+        //browser sends request to "/start" after user entered username
         get("/start", (req, res) -> {
             String username = req.queryParams("username");
             if(username != null && !username.equals("") && !Game.isUsernameInUse(username)) {

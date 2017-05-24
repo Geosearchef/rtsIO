@@ -29,7 +29,7 @@ public class Game {
         }
     }
 
-
+    //Called from websocket, after user tries to login
     public static void attemptLogin(@NonNull String username, @NonNull String token, Session session) {
         Optional<Player> player = null;
         synchronized (connectingPlayers) {
@@ -38,14 +38,16 @@ public class Game {
         if (player.isPresent()) {
             player.get().login(token, session);
             if (player.get().isLoggedIn()) {
+                //Broadcast logged in player to other players (including the player itself) TODO: loggin in player is contained 2 times????
                 broadcastPlayers(player.get().constructConnectMessage());
             }
         } else {
+            //Wrong username, token or timed out
             WebSocket.INSTANCE.redirectToLoginPage(session);
         }
     }
 
-    //not yet logged in
+    //on connect to websocket, user is not yet logged in
     public static void userConnected(@NonNull String username, String token) {
         Player newPlayer = new Player(IDFactory.generatePlayerID(), username, token);
         synchronized (connectingPlayers) {

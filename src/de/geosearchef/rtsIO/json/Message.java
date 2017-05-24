@@ -3,7 +3,8 @@ package de.geosearchef.rtsIO.json;
 import com.google.gson.Gson;
 
 /**
- * Created by Geosearchef on 23.05.2017.
+ * super class for all messages
+ * is automatically serialized/converted to JSON via reflection based on field names
  */
 public abstract class Message {
     public static final Gson gson = new Gson();

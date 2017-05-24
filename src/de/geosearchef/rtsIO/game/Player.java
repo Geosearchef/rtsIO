@@ -44,7 +44,7 @@ public class Player {
         }
     }
 
-
+    //attempts login of player via token over websocket
     public void login(String token, Session session) {
         if(! token.equals(this.loginToken)) {
             WebSocket.INSTANCE.redirectToLoginPage(session);
@@ -86,6 +86,7 @@ public class Player {
         } catch(IOException e) {logger.warn("Could not send message to player: " + message, e);}
     }
 
+    //constructs a message that is broadcasted on the connect of this player
     public JSONObject constructConnectMessage() {
         JSONObject connectMessage = new JSONObject();
         connectMessage.put("type", "playerConnect");

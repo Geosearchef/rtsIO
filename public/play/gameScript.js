@@ -1,9 +1,10 @@
-window.onload = init;
+window.onload = init;//set init() to be executed on page loading
 
 
-var connected = false;
-var username;
-var playerID;
+var connected = false;//did the login succeed?
+var username;//own username
+var playerID;//own playerID
+
 var socket;
 
 function onMessage(event) {
@@ -54,6 +55,7 @@ function init() {
 
 
 //TODO: rewrite
+//returns a URL parameter
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
