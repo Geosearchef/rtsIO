@@ -7,7 +7,23 @@ var playerID;//own playerID
 
 var socket;
 
-function onMessage(event) {
+
+/*
+ * VIEW -------------------------------------------------------------------------------
+ */
+
+/*
+ * END VIEW -------------------------------------------------------------------------------
+ */
+
+
+
+
+/*
+ * WEB SOCKET -------------------------------------------------------------------------
+ */
+
+function onSocketMessage(event) {
     var msg = JSON.parse(event.data);
     alert(event.data);
 
@@ -25,20 +41,32 @@ function send(message) {
     socket.send(JSON.stringify(message));
 }
 
-function onClose() {
+function onSocketClose() {
     window.location.href = "/?connectionLost=true"
 }
 
-function init() {
-
+function webSocketInit() {
     socket = new WebSocket("ws://" + window.location.hostname + ":" + location.port + "/play/socket");
     socket.onopen = function () {
         //Attempt login on server using username and token
         var loginMessage = {type: "login", username: Util.getParameterByName("username"), token : Util.getParameterByName("token")};
         send(loginMessage);
     }
-    socket.onmessage = onMessage;
-    socket.onclose = onClose;
+    socket.onmessage = onSocketMessage;
+    socket.onclose = onSocketClose;
+}
+
+/*
+ * WEB SOCKET END -------------------------------------------------------------------------
+ */
+
+
+
+
+
+function init() {
+
+    webSocketInit();
 }
 
 
