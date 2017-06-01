@@ -7,14 +7,37 @@ var playerID;//own playerID
 
 var socket;
 
+
 /*
  * VIEW -----------------------------------------------------------------------------------
  */
 
-function render(d) {
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
 
+function render(d) {
+    handleResize();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, 10000, 10000);
 }
 
+var oldWidth = 0;
+var oldHeight = 0;
+function handleResize() {
+    var newWidth = window.innerWidth;
+    var newHeight = window.innerHeight;
+
+    if(oldWidth == newWidth && oldHeight == newHeight)
+        return;
+    console.log(newWidth + " x " + newHeight);
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+
+    oldWidth = newWidth;
+    oldHeight = newHeight;
+}
 
 /*
  * END VIEW -------------------------------------------------------------------------------
@@ -37,20 +60,21 @@ function gameLoop() {
     update(delta);
     render(delta);
 }
-var test = 0;
+
+
 function update(d) {
-    test += d;
-    document.getElementById("username").innerHTML = test;
+
 }
 
 
 function loggedIn() {
-    document.getElementById("test").innerHTML = "Username: " + username;
+
 }
 
 /*
  * END CONTROLLER -------------------------------------------------------------------------
  */
+
 
 
 
