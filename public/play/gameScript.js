@@ -1,5 +1,6 @@
 window.onload = init;//set init() to be executed on page loading
 
+const CELL_SCALE = 50.0;
 
 var connected = false;//did the login succeed?
 var username;//own username
@@ -15,12 +16,27 @@ var socket;
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
+var test = new Image();
+test.src = "img/test.svg";
+
 function render(d) {
     handleResize();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(0, 0, 10000, 10000);
+    //Render grid
+    ctx.strokeStyle = "#868686";
+    ctx.beginPath();
+    for(var x = 0;x < canvas.width;x += CELL_SCALE) {
+        ctx.moveTo(x + 0.5, 0);
+        ctx.lineTo(x + 0.5, canvas.height);
+    }
+    for(var y = 0;y < canvas.height;y += CELL_SCALE) {
+        ctx.moveTo(0, y + 0.5);
+        ctx.lineTo(canvas.width, y + 0.5);
+    }
+    ctx.stroke();
+
+    ctx.drawImage(test, 100, 100);
 }
 
 var oldWidth = 0;
@@ -31,7 +47,7 @@ function handleResize() {
 
     if(oldWidth == newWidth && oldHeight == newHeight)
         return;
-    console.log(newWidth + " x " + newHeight);
+
     canvas.width = newWidth;
     canvas.height = newHeight;
 
