@@ -7,10 +7,14 @@ var playerID;//own playerID
 
 var socket;
 
-
 /*
- * VIEW -------------------------------------------------------------------------------
+ * VIEW -----------------------------------------------------------------------------------
  */
+
+function render(d) {
+
+}
+
 
 /*
  * END VIEW -------------------------------------------------------------------------------
@@ -20,19 +24,51 @@ var socket;
 
 
 /*
+ * CONTROLLER -----------------------------------------------------------------------------
+ */
+
+//Set interrupt for gameLoop
+var lastFrame = Date.now();
+setInterval(gameLoop, 16.6666667);
+
+function gameLoop() {
+    var delta = Date.now() - lastFrame;
+    lastFrame += delta;
+    update(delta);
+    render(delta);
+}
+var test = 0;
+function update(d) {
+    test += d;
+    document.getElementById("username").innerHTML = test;
+}
+
+
+function loggedIn() {
+    document.getElementById("test").innerHTML = "Username: " + username;
+}
+
+/*
+ * END CONTROLLER -------------------------------------------------------------------------
+ */
+
+
+
+/*
  * WEB SOCKET -------------------------------------------------------------------------
  */
 
 function onSocketMessage(event) {
     var msg = JSON.parse(event.data);
-    alert(event.data);
+    //alert(event.data);
 
     switch (msg.type) {
         case "loginSuccess":
             username = msg.username;
             playerID = msg.id;
             connected = true;
-            alert("Received username " + username);
+            loggedIn();
+
             break;
     }
 }
@@ -42,7 +78,7 @@ function send(message) {
 }
 
 function onSocketClose() {
-    window.location.href = "/?connectionLost=true"
+    window.location.href = "/?connectionLost=true";
 }
 
 function webSocketInit() {

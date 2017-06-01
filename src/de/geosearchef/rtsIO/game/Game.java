@@ -40,7 +40,7 @@ public class Game {
         if (player.isPresent()) {
             player.get().login(token, session);
             if (player.get().isLoggedIn()) {
-                //Broadcast logged in player to other players (including the player itself) TODO: loggin in player is contained 2 times????
+                //Broadcast logged in player to other players (including the player itself) TODO: logging in player is contained 2 times????
                 broadcastPlayers(new PlayerConnectMessage(player.get().getId(), player.get().getUsername()));
             }
         } else {
@@ -73,7 +73,7 @@ public class Game {
 
     public static void sessionClosed(Session session) {
         synchronized (players) {
-            players.stream().filter(p -> p.getSession().equals(session)).findAny().ifPresent(p -> playerDisconnected(p));
+            getPlayerBySession(session).ifPresent(p -> playerDisconnected(p));
         }
     }
 
