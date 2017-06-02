@@ -18,31 +18,38 @@ center.screen = function() {return {x: center.x * CELL_SCALE, y: center.y * CELL
  */
 
 var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
-var ctxScreen = canvas.getContext("2d");
+var ctx = canvas.getContext("2d");//relative to center
+var ctxScreen = canvas.getContext("2d");//relative to screen
 
 var test = new Image();
 test.src = "img/test.svg";
 
 function render(d) {
     handleResize();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctxScreen.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    // ctx.translate(-50, -50);
+    ctx.translate(-(center.screen().x - (canvas.width / 2)), -(center.screen().y - (canvas.height / 2)));
 
     //Render grid
     ctx.strokeStyle = "#868686";
     ctx.beginPath();
 
     for(var x = (center.screen().x - canvas.width / 2)- ((center.screen().x - canvas.width / 2) % CELL_SCALE) + CELL_SCALE;x < center.screen().x + canvas.width / 2;x += CELL_SCALE) {
-        ctx.moveTo(x + 0.5, 0);
-        ctx.lineTo(x + 0.5, canvas.height);console.log(x);
+        console.log();
+        ctx.moveTo(x + 0.5, center.screen().y - canvas.height / 2);
+        ctx.lineTo(x + 0.5, center.screen().y + canvas.height / 2);
     }
-    for(var y = 0;y < canvas.height;y += CELL_SCALE) {
-        ctx.moveTo(0, y + 0.5);
-        ctx.lineTo(canvas.width, y + 0.5);
+    for(var y = (center.screen().y - canvas.height / 2)- ((center.screen().y - canvas.height / 2) % CELL_SCALE) + CELL_SCALE;y < center.screen().y + canvas.height / 2;y += CELL_SCALE) {
+        ctx.moveTo(-10000, y + 0.5);
+        ctx.lineTo(10000, y + 0.5);
     }
     ctx.stroke();
 
-    ctx.drawImage(test, 100, 100);
+    ctx.drawImage(test, 50 * CELL_SCALE, 50 * CELL_SCALE);
+
+
+    ctx.restore();
 }
 
 var oldWidth = 0;
@@ -56,9 +63,6 @@ function handleResize() {
 
     canvas.width = newWidth;
     canvas.height = newHeight;
-
-    ctx.restore();
-    ctx.translate((center.screen().x + (canvas.width / 2)), (center.screen().y + (canvas.height / 2)));
 
     oldWidth = newWidth;
     oldHeight = newHeight;

@@ -12,7 +12,7 @@ import java.util.Map;
 public class SpamPrevention {
 
     private static final long SPAM_CACHE_CLEAR_INTERVAL = 300 * 1000;//5 minutes
-    private static final long MAX_REQUESTS_PER_INTERVAL = 5;
+    private static final long MAX_REQUESTS_PER_INTERVAL = 1000;//TODO
 
     private static final Logger logger = LoggerFactory.getLogger(SpamPrevention.class);
 
