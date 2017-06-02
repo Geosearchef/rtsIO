@@ -2,12 +2,16 @@ window.onload = init;//set init() to be executed on page loading
 
 const CELL_SCALE = 50.0;
 
+const MAP_SIZE = {x:100, y:100};
+
+
 var connected = false;//did the login succeed?
 var username;//own username
 var playerID;//own playerID
 
-var socket;
-
+var center = {x: MAP_SIZE.x / 2 + 0.5,y: MAP_SIZE.y / 2 + 0.5};
+center.screen = function() {return {x: center.x * CELL_SCALE, y: center.y * CELL_SCALE}};
+//TODO: update
 
 /*
  * VIEW -----------------------------------------------------------------------------------
@@ -15,6 +19,7 @@ var socket;
 
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+var ctxScreen = canvas.getContext("2d");
 
 var test = new Image();
 test.src = "img/test.svg";
@@ -26,9 +31,10 @@ function render(d) {
     //Render grid
     ctx.strokeStyle = "#868686";
     ctx.beginPath();
-    for(var x = 0;x < canvas.width;x += CELL_SCALE) {
+
+    for(var x = (center.screen().x - canvas.width / 2)- ((center.screen().x - canvas.width / 2) % CELL_SCALE) + CELL_SCALE;x < center.screen().x + canvas.width / 2;x += CELL_SCALE) {
         ctx.moveTo(x + 0.5, 0);
-        ctx.lineTo(x + 0.5, canvas.height);
+        ctx.lineTo(x + 0.5, canvas.height);console.log(x);
     }
     for(var y = 0;y < canvas.height;y += CELL_SCALE) {
         ctx.moveTo(0, y + 0.5);
@@ -50,6 +56,9 @@ function handleResize() {
 
     canvas.width = newWidth;
     canvas.height = newHeight;
+
+    ctx.restore();
+    ctx.translate((center.screen().x + (canvas.width / 2)), (center.screen().y + (canvas.height / 2)));
 
     oldWidth = newWidth;
     oldHeight = newHeight;
@@ -97,6 +106,8 @@ function loggedIn() {
 /*
  * WEB SOCKET -------------------------------------------------------------------------
  */
+var socket;
+
 
 function onSocketMessage(event) {
     var msg = JSON.parse(event.data);
