@@ -1,6 +1,7 @@
 package de.geosearchef.rtsIO;
 
 import de.geosearchef.rtsIO.api.Api;
+import de.geosearchef.rtsIO.js.JSCombiner;
 import de.geosearchef.rtsIO.websocket.WebSocket;
 
 import static spark.Spark.*;
@@ -21,6 +22,6 @@ public class Main {
         WebSocket.init();
         Api.init();
 
+        get("/play/gameScript.js", (req, res) -> JSCombiner.getCombinedJS());
     }
-
 }
