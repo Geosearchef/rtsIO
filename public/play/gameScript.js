@@ -4,13 +4,14 @@ const CELL_SCALE = 50.0;
 
 const MAP_SIZE = {x:100, y:100};
 
+const MAP_MOVE_SPEED = 5;
 
 var connected = false;//did the login succeed?
 var username;//own username
 var playerID;//own playerID
 
-var center = {x: MAP_SIZE.x / 2 + 0.5,y: MAP_SIZE.y / 2 + 0.5};
-center.screen = function() {return {x: center.x * CELL_SCALE, y: center.y * CELL_SCALE}};
+var center = Vector.new(MAP_SIZE.x / 2 + 0.5, MAP_SIZE.y / 2 + 0.5);
+center.screen = function() {return Vector.new(center.x * CELL_SCALE, center.y * CELL_SCALE)};
 //TODO: update
 
 /*
@@ -52,6 +53,28 @@ function render(d) {
     ctx.restore();
 }
 
+//INPUT
+var Key = {
+    pressed: new Array(256).fill(false),
+    LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40,
+    isDown: function(keyCode) {return Key.pressed[keyCode];},
+    onKeyDown: function(event) {Key.pressed[event.keyCode] = true;},
+    onKeyUp: function(event) {Key.pressed[event.keyCode] = false;}
+};
+window.addEventListener('keydown', Key.onKeyDown);
+window.addEventListener('keyup', Key.onKeyUp);
+
+
+function input(d) {
+    var centerMoveDir = Vector.new(0, 0);
+    if(Key.isDown(Key.LEFT)) centerMoveDir.x -= 1;
+    if(Key.isDown(Key.UP)) centerMoveDir.y -= 1;
+    if(Key.isDown(Key.RIGHT)) centerMoveDir.x += 1;
+    if(Key.isDown(Key.DOWN)) centerMoveDir.y += 1;
+
+    Vector.set(center, Vector.add(center, Vector.scale(centerMoveDir, d * MAP_MOVE_SPEED)));
+}
+
 var oldWidth = 0;
 var oldHeight = 0;
 function handleResize() {
@@ -86,8 +109,9 @@ setInterval(gameLoop, 16.6666667);
 function gameLoop() {
     var delta = Date.now() - lastFrame;
     lastFrame += delta;
-    update(delta);
-    render(delta);
+    input(delta / 1000);
+    update(delta / 1000);
+    render(delta / 1000);
 }
 
 
@@ -150,8 +174,6 @@ function webSocketInit() {
 /*
  * WEB SOCKET END -------------------------------------------------------------------------
  */
-
-
 
 
 
