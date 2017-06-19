@@ -48,7 +48,7 @@ function render(d) {
     }
     ctx.stroke();
 
-    ctx.drawImage(test, 50 * CELL_SCALE, 50 * CELL_SCALE);
+    ctx.drawImage(test, Math.floor(screenToMapSpace(Mouse).x) * CELL_SCALE, Math.floor(screenToMapSpace(Mouse).y) * CELL_SCALE);
 
 
     ctx.restore();
@@ -69,6 +69,8 @@ window.addEventListener('mousemove', function(event) {Mouse.x = event.clientX; M
 window.addEventListener('mouseout', function(event) {Mouse.x = canvas.width / 2; Mouse.y = canvas.height / 2});
 
 function input(d) {
+
+    //Map movement
     var centerMoveDir = Vector.new(0, 0);
     if(Key.isDown(Key.LEFT)) centerMoveDir.x -= 1;
     if(Key.isDown(Key.UP)) centerMoveDir.y -= 1;
@@ -98,6 +100,12 @@ function handleResize() {
 
     Mouse.x = newWidth / 2;
     Mouse.y = newHeight / 2;
+}
+
+
+
+function screenToMapSpace(screen) {
+    return Vector.new((center.x - canvas.width / 2 / CELL_SCALE) + screen.x / CELL_SCALE, (center.y - canvas.height / 2 / CELL_SCALE) + screen.y / CELL_SCALE);
 }
 
 /*
