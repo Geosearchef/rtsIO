@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class JSCombiner {
 
-    public static final String[] files = {"view.js"};
+    public static final String[] files = {"controller.js", "view.js", "websocket.js", "input.js"};
 
     //TODO: cache in production
     public static String getCombinedJS() throws FileNotFoundException {
