@@ -4,6 +4,7 @@ const CELL_SCALE = 50.0;
 
 const MAP_SIZE = {x:100, y:100};
 
+const MAP_MOVE_BORDER_SIZE = 30;
 const MAP_MOVE_SPEED = 5;
 
 var connected = false;//did the login succeed?
@@ -63,7 +64,9 @@ var Key = {
 };
 window.addEventListener('keydown', Key.onKeyDown);
 window.addEventListener('keyup', Key.onKeyUp);
-
+var Mouse = {x: canvas.width / 2, y : canvas.height / 2};
+window.addEventListener('mousemove', function(event) {Mouse.x = event.clientX; Mouse.y = event.clientY});
+window.addEventListener('mouseout', function(event) {Mouse.x = canvas.width / 2; Mouse.y = canvas.height / 2});
 
 function input(d) {
     var centerMoveDir = Vector.new(0, 0);
@@ -71,6 +74,10 @@ function input(d) {
     if(Key.isDown(Key.UP)) centerMoveDir.y -= 1;
     if(Key.isDown(Key.RIGHT)) centerMoveDir.x += 1;
     if(Key.isDown(Key.DOWN)) centerMoveDir.y += 1;
+    if(Mouse.x < MAP_MOVE_BORDER_SIZE) centerMoveDir.x -= 1;
+    if(Mouse.y < MAP_MOVE_BORDER_SIZE) centerMoveDir.y -= 1;
+    if(Mouse.x > canvas.width - MAP_MOVE_BORDER_SIZE) centerMoveDir.x += 1;
+    if(Mouse.y > canvas.height - MAP_MOVE_BORDER_SIZE) centerMoveDir.y += 1;
 
     Vector.set(center, Vector.add(center, Vector.scale(centerMoveDir, d * MAP_MOVE_SPEED)));
 }
@@ -86,9 +93,11 @@ function handleResize() {
 
     canvas.width = newWidth;
     canvas.height = newHeight;
-
     oldWidth = newWidth;
     oldHeight = newHeight;
+
+    Mouse.x = newWidth / 2;
+    Mouse.y = newHeight / 2;
 }
 
 /*
