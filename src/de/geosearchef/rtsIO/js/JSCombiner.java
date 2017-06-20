@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class JSCombiner {
 
-    public static final String[] files = {"controller.js", "view.js", "websocket.js", "input.js", "util/vector.js"};
+    public static final String[] files = {"controller.js", "view.js", "websocket.js", "input.js", "util/vector.js", "game/data.js"};
 
     private static String combineJS() throws FileNotFoundException {
         StringBuilder s = new StringBuilder();

@@ -11,7 +11,22 @@ function onSocketMessage(event) {
             playerID = msg.id;
             connected = true;
             loggedIn();
+            break;
 
+        case "playerConnect":
+            onPlayerConnect(msg.id, msg.username);
+            break;
+
+        case "playerDisconnect":
+            onPlayerDisconnect(msg.id);
+            break;
+
+        case "newUnit":
+            onNewUnitMessage(msg);
+            break;
+
+        case "deleteUnit":
+            onDeleteUnit(msg.unitID);
             break;
     }
 }

@@ -9,6 +9,44 @@ var connected = false;//did the login succeed?
 var username;//own username
 var playerID;//own playerID
 
+var players = new Map();
+var units = new Map();
+
+
+
+
+function update(d) {
+
+}
+
+
+function loggedIn() {
+    //TODO
+}
+
+
+
+//maybe outsource to parser???
+function onNewUnitMessage(msg) {
+    var unit = new Unit(msg.playerID, msg.unitID, msg.unitType, msg.pos, msg.vel, msg.hp);
+    units.set(msg.unitID, unit);
+}
+
+function onDeleteUnit(id) {
+
+}
+
+function onPlayerConnect(id, username) {
+    players.set(id, new Player(id, username));
+}
+
+function onPlayerDisconnect(id) {
+    players.delete(id);
+}
+
+
+
+
 
 //Set interrupt for gameLoop
 var lastFrame = Date.now();
@@ -21,19 +59,6 @@ function gameLoop() {
     update(delta / 1000);
     render(delta / 1000);
 }
-
-
-function update(d) {
-
-}
-
-
-function loggedIn() {
-
-}
-
-
-
 
 function init() {
 
