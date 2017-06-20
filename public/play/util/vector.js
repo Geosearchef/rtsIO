@@ -1,9 +1,5 @@
-var Util = {};
 
 
-/*
- * Library stuff
- */
 function Vector(x, y) {
     this.x = x;
     this.y = y;
@@ -22,15 +18,3 @@ function Vector(x, y) {
     this.set = function(v) {this.x = v.x; this.y = v.y;return this;};
 }
 
-
-
-//TODO: rewrite
-//returns a URL parameter
-Util.getParameterByName = function (name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    //TODO: if parameter not present, uncaught
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-}

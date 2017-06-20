@@ -29,7 +29,6 @@ function render(d) {
     ctx.beginPath();
 
     for(var x = (center.screen().x - canvas.width / 2)- ((center.screen().x - canvas.width / 2) % CELL_SCALE) + CELL_SCALE;x < center.screen().x + canvas.width / 2;x += CELL_SCALE) {
-        console.log();
         ctx.moveTo(x + 0.5, center.screen().y - canvas.height / 2);
         ctx.lineTo(x + 0.5, center.screen().y + canvas.height / 2);
     }

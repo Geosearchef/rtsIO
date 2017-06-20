@@ -28,7 +28,5 @@ function input(d) {
     if(Mouse.x > canvas.width - MAP_MOVE_BORDER_SIZE) centerMoveDir.x += 1;
     if(Mouse.y > canvas.height - MAP_MOVE_BORDER_SIZE) centerMoveDir.y += 1;
 
-    //Vector.set(center, Vector.add(center, Vector.scale(centerMoveDir, d * MAP_MOVE_SPEED)));
-    console.log(centerMoveDir.scale(d * MAP_MOVE_SPEED));
     center.setAdd(centerMoveDir.scale(d * MAP_MOVE_SPEED));
 }
