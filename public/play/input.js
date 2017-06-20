@@ -18,7 +18,7 @@ window.addEventListener('mouseout', function(event) {Mouse.x = canvas.width / 2;
 function input(d) {
 
     //Map movement
-    var centerMoveDir = Vector.new(0, 0);
+    var centerMoveDir = new Vector(0, 0);
     if(Key.isDown(Key.LEFT)) centerMoveDir.x -= 1;
     if(Key.isDown(Key.UP)) centerMoveDir.y -= 1;
     if(Key.isDown(Key.RIGHT)) centerMoveDir.x += 1;
@@ -28,5 +28,7 @@ function input(d) {
     if(Mouse.x > canvas.width - MAP_MOVE_BORDER_SIZE) centerMoveDir.x += 1;
     if(Mouse.y > canvas.height - MAP_MOVE_BORDER_SIZE) centerMoveDir.y += 1;
 
-    Vector.set(center, Vector.add(center, Vector.scale(centerMoveDir, d * MAP_MOVE_SPEED)));
+    //Vector.set(center, Vector.add(center, Vector.scale(centerMoveDir, d * MAP_MOVE_SPEED)));
+    console.log(centerMoveDir.scale(d * MAP_MOVE_SPEED));
+    center.setAdd(centerMoveDir.scale(d * MAP_MOVE_SPEED));
 }

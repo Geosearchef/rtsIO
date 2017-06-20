@@ -3,8 +3,8 @@
 const MAP_MOVE_BORDER_SIZE = 30;
 const MAP_MOVE_SPEED = 5;
 
-var center = Vector.new(MAP_SIZE.x / 2 + 0.5, MAP_SIZE.y / 2 + 0.5);
-center.screen = function() {return Vector.new(center.x * CELL_SCALE, center.y * CELL_SCALE)};
+var center = new Vector(MAP_SIZE.x / 2 + 0.5, MAP_SIZE.y / 2 + 0.5);
+center.screen = function() {return new Vector(center.x * CELL_SCALE, center.y * CELL_SCALE)};
 //TODO: update
 
 
@@ -68,6 +68,6 @@ function handleResize() {
 
 
 function screenToMapSpace(screen) {
-    return Vector.new((center.x - canvas.width / 2 / CELL_SCALE) + screen.x / CELL_SCALE, (center.y - canvas.height / 2 / CELL_SCALE) + screen.y / CELL_SCALE);
+    return new Vector((center.x - canvas.width / 2 / CELL_SCALE) + screen.x / CELL_SCALE, (center.y - canvas.height / 2 / CELL_SCALE) + screen.y / CELL_SCALE);
 }
 
