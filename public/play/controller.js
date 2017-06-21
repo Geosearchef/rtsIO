@@ -16,7 +16,9 @@ var units = new Map();
 
 
 function update(d) {
-
+    units.forEach(function(unit) {
+        unit.pos.setAdd(unit.vel.scale(d));
+    });
 }
 
 
@@ -28,7 +30,7 @@ function loggedIn() {
 
 //maybe outsource to parser???
 function onNewUnitMessage(msg) {
-    var unit = new Unit(msg.playerID, msg.unitID, msg.unitType, msg.pos, msg.vel, msg.hp);
+    var unit = new Unit(msg.playerID, msg.unitID, msg.unitType, cloneVector(msg.pos), cloneVector(msg.vel), msg.hp);
     units.set(msg.unitID, unit);
 }
 

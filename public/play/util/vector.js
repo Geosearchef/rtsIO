@@ -18,3 +18,4 @@ function Vector(x, y) {
     this.set = function(v) {this.x = v.x; this.y = v.y;return this;};
 }
 
+function cloneVector(v) {return new Vector(v.x, v.y);}

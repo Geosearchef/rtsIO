@@ -12,8 +12,7 @@ public class Game {
 
     public static Logger logger = LoggerFactory.getLogger(Game.class);
 
-    public static ArrayList<Unit> units = new ArrayList<Unit>();
-
+    public static Set<Unit> units = new HashSet<Unit>();
 
 
     public static void addUnit(Unit unit) {

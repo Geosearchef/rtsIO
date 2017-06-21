@@ -3,7 +3,6 @@ var socket;
 
 function onSocketMessage(event) {
     var msg = JSON.parse(event.data);
-    //alert(event.data);
 
     switch (msg.type) {
         case "loginSuccess":

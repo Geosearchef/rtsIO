@@ -18,6 +18,7 @@ public class Unit {
         this.unitID = IDFactory.generateUnitID();
         this.unitType = unitType;
         this.pos = new Vector(pos);
+        this.vel = new Vector();
         this.hp = hp;
     }
 }

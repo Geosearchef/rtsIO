@@ -4,6 +4,7 @@ import de.geosearchef.rtsIO.json.LoginSuccessMessage;
 import de.geosearchef.rtsIO.json.Message;
 import de.geosearchef.rtsIO.json.PlayerConnectMessage;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
+import de.geosearchef.rtsIO.util.Vector;
 import lombok.Getter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.simple.JSONObject;
@@ -74,6 +75,7 @@ public class Player {
         this.send(new LoginSuccessMessage(this.username, this.playerID));
 
         this.sendGameInfo();
+        Game.addUnit(new Unit(this, 0, new Vector(50, 50), 100));
 
         logger.info("User " + this.username + " connected");
     }

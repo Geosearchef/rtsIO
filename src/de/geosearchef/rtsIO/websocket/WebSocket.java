@@ -2,6 +2,7 @@ package de.geosearchef.rtsIO.websocket;
 
 import de.geosearchef.rtsIO.game.Game;
 import de.geosearchef.rtsIO.game.Player;
+import de.geosearchef.rtsIO.game.PlayerManager;
 import lombok.Getter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -51,7 +52,7 @@ public enum WebSocket {
         synchronized (sessions) {
             sessions.remove(session);
         }
-        Game.sessionClosed(session);
+        PlayerManager.sessionClosed(session);
     }
 
     @OnWebSocketMessage
@@ -63,13 +64,13 @@ public enum WebSocket {
             if (Objects.equals((String) message.get("type"), "login")) {
                 //Login
                 try {
-                    Game.attemptLogin((String) message.get("username"), (String) message.get("token"), session);
+                    PlayerManager.attemptLogin((String) message.get("username"), (String) message.get("token"), session);
                 } catch (Exception e) {
                     redirectToLoginPage(session);
                 }
             } else {
                 //Default message parsing
-                Optional<Player> player = Game.getPlayerBySession(session);
+                Optional<Player> player = PlayerManager.getPlayerBySession(session);
                 player.ifPresent(p -> CompletableFuture.runAsync(() -> p.onMessage(message)));
             }
 

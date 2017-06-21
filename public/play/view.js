@@ -40,10 +40,16 @@ function render(d) {
 
     ctx.drawImage(test, Math.floor(screenToMapSpace(Mouse).x) * CELL_SCALE, Math.floor(screenToMapSpace(Mouse).y) * CELL_SCALE);
 
+    console.log(units.size);
+    //render units
+    units.forEach(function (unit) {
+        ctx.drawImage(test, unit.pos.x * CELL_SCALE, unit.pos.y * CELL_SCALE);//TODO unit center?
+    });
 
     ctx.restore();
 }
-
+//units.set(0, new Unit(0, 0, 0, new Vector(0, 0), new Vector(0, 0), 100));
+//units.set(1, new Unit(0, 1, 0, new Vector(1, 1), new Vector(1, 1), 100));
 
 
 var oldWidth = 0;
