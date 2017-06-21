@@ -3,6 +3,7 @@ package de.geosearchef.rtsIO.game;
 import de.geosearchef.rtsIO.json.LoginSuccessMessage;
 import de.geosearchef.rtsIO.json.Message;
 import de.geosearchef.rtsIO.json.PlayerConnectMessage;
+import de.geosearchef.rtsIO.json.units.NewUnitMessage;
 import lombok.Getter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.simple.JSONObject;
@@ -21,7 +22,7 @@ public class Player {
     private static final Logger logger = LoggerFactory.getLogger(Player.class);
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
 
-    @Getter private final int id;
+    @Getter private final int playerID;
     @Getter private final long loginTime;
     @Getter private final String username;
     @Getter private final String loginToken;
@@ -30,7 +31,7 @@ public class Player {
     @Getter private Session session;
 
     public Player(int id, String username, String loginToken) {
-        this.id = id;
+        this.playerID = id;
         this.username = username;
         this.loginToken = loginToken;
         this.loginTime = System.currentTimeMillis();
@@ -55,32 +56,42 @@ public class Player {
     public void login(String token, Session session) {
         if(! token.equals(this.loginToken)) {
             WebSocket.INSTANCE.redirectToLoginPage(session);
-            synchronized (Game.connectingPlayers) {
-                Game.connectingPlayers.remove(this);
+            synchronized (PlayerManager.connectingPlayers) {
+                PlayerManager.connectingPlayers.remove(this);
             }
             return;
         }
 
         connected = true;
         this.session = session;
-        synchronized (Game.players) {
-            Game.players.add(this);
+        synchronized (PlayerManager.players) {
+            PlayerManager.players.add(this);
         }
-        synchronized (Game.connectingPlayers) {
-            Game.connectingPlayers.remove(this);
+        synchronized (PlayerManager.connectingPlayers) {
+            PlayerManager.connectingPlayers.remove(this);
         }
 
-        this.send(new LoginSuccessMessage(this.username, this.id));
+        this.send(new LoginSuccessMessage(this.username, this.playerID));
 
-        //Send game information to new connecting player
-
-        //Send all players to this player
-        synchronized (Game.players) {
-            Game.players.forEach(p -> this.send(new PlayerConnectMessage(p.getId(), p.getUsername())));
-        }
+        this.sendGameInfo();
 
         logger.info("User " + this.username + " connected");
     }
+
+    private void sendGameInfo() {
+        //Send game information to new connecting player
+
+        //Send all players to this player
+        synchronized (PlayerManager.players) {
+            PlayerManager.players.forEach(p -> this.send(new PlayerConnectMessage(p.getPlayerID(), p.getUsername())));
+        }
+
+        //Send all units to this player
+        synchronized (Game.units) {
+            Game.units.forEach(u -> this.send(new NewUnitMessage(u.getPlayer().getPlayerID(), u.getUnitID(), u.getUnitType(), u.getPos(), u.getVel(), u.getHp())));
+        }
+    }
+
 
     public void send(Message message) {send(message.toJson());}
     public void send(JSONObject message) {send(message.toJSONString());}
@@ -106,10 +117,10 @@ public class Player {
 
     //checks if the player logged in and if not frees the name reservation
     public void checkLoginTimeout() {
-        synchronized (Game.connectingPlayers) {
-            if(!this.isConnected() && Game.connectingPlayers.contains(this)) {
+        synchronized (PlayerManager.connectingPlayers) {
+            if(!this.isConnected() && PlayerManager.connectingPlayers.contains(this)) {
                 logger.info("Player " + username + ": login timed out");
-                Game.connectingPlayers.remove(this);
+                PlayerManager.connectingPlayers.remove(this);
             }
         }
     }

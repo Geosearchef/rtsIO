@@ -3,8 +3,10 @@ package de.geosearchef.rtsIO.json.units;
 import de.geosearchef.rtsIO.json.Message;
 import de.geosearchef.rtsIO.util.Vector;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
+@RequiredArgsConstructor
 public class NewUnitMessage extends Message {
 
     private final String type = "newUnit";
@@ -13,5 +15,5 @@ public class NewUnitMessage extends Message {
     private final int unitType;
     private final Vector pos;
     private final Vector vel;
-    private final int hp;
+    private final float hp;
 }

@@ -1,114 +1,46 @@
 package de.geosearchef.rtsIO.game;
 
-import de.geosearchef.rtsIO.IDFactory;
-import de.geosearchef.rtsIO.json.Message;
-import de.geosearchef.rtsIO.json.PlayerConnectMessage;
-import de.geosearchef.rtsIO.json.PlayerDisconnectMessage;
-import lombok.NonNull;
-import org.eclipse.jetty.websocket.api.Session;
-import org.json.simple.JSONObject;
+import de.geosearchef.rtsIO.json.units.DeleteUnitMessage;
+import de.geosearchef.rtsIO.json.units.NewUnitMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import de.geosearchef.rtsIO.websocket.WebSocket;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Game {
 
     public static Logger logger = LoggerFactory.getLogger(Game.class);
 
-    public static final Set<Player> connectingPlayers = new HashSet<Player>();
-    public static final Set<Player> players = new HashSet<Player>();
+    public static ArrayList<Unit> units = new ArrayList<Unit>();
 
 
-    public static void broadcastPlayers(Message message) {broadcastPlayers(message.toJson());}
-    public static void broadcastPlayers(JSONObject message) {broadcastPlayers(message.toJSONString());}
-    public static void broadcastPlayers(String message) {
-        synchronized (players) {
-            players.forEach(p -> p.send(message));
+
+    public static void addUnit(Unit unit) {
+        synchronized (units) {
+            units.add(unit);
         }
+        PlayerManager.broadcastPlayers(new NewUnitMessage(unit.getPlayer().getPlayerID(), unit.getUnitID(), unit.getUnitType(), unit.getPos(), unit.getVel(), unit.getHp()));
     }
 
-    //Called from websocket, after user tries to login
-    public static void attemptLogin(@NonNull String username, @NonNull String token, Session session) {
-        Optional<Player> player = null;
-        synchronized (connectingPlayers) {
-            player = connectingPlayers.stream().filter(p -> p.getUsername().equals(username)).findAny();
+    public static void removeUnit(Unit unit) {
+        synchronized (units) {
+            units.remove(unit);
         }
-        if (player.isPresent()) {
-            player.get().login(token, session);
-            if (player.get().isLoggedIn()) {
-                //Broadcast logged in player to other players (including the player itself) TODO: logging in player is contained 2 times????
-                broadcastPlayers(new PlayerConnectMessage(player.get().getId(), player.get().getUsername()));
-            }
-        } else {
-            //Wrong username, token or timed out
-            WebSocket.INSTANCE.redirectToLoginPage(session);
-        }
-    }
-
-    //on connect to websocket, user is not yet logged in
-    public static void userConnected(@NonNull String username, String token) {
-        Player newPlayer = new Player(IDFactory.generatePlayerID(), username, token);
-        synchronized (connectingPlayers) {
-            if (isUsernameConnecting(username)) {
-                logger.error("Lost player during connection process due to duplicate username: " + username);
-                return;
-            }
-            connectingPlayers.add(newPlayer);
-        }
+        PlayerManager.broadcastPlayers(new DeleteUnitMessage(unit.getUnitID()));
     }
 
 
-    public static void playerDisconnected(Player player) {
-        synchronized (players) {
-            players.remove(player);
-        }
 
-        logger.info(player.getUsername() + " disconnected");
-        broadcastPlayers(new PlayerDisconnectMessage(player.getId()));
-    }
-
-    public static void sessionClosed(Session session) {
-        synchronized (players) {
-            getPlayerBySession(session).ifPresent(p -> playerDisconnected(p));
+    public static Optional<Unit> getUnitByID(int unitID) {
+        synchronized (units) {
+            return units.stream().filter(u -> u.getUnitID() == unitID).findAny();
         }
     }
 
-    public static Optional<Player> getPlayerByID(int id) {
-        synchronized (Game.players) {
-            return players.stream().filter(p -> p.getId() == id).findAny();
+    public static List<Unit> getUnitsByPlayer(Player player) {
+        synchronized (units) {
+            return units.stream().filter(u -> u.getPlayer() == player).collect(Collectors.toList());
         }
     }
-
-    public static Optional<Player> getPlayerByUsername(String username) {
-        synchronized (Game.players) {
-            return players.stream().filter(p -> p.getUsername().equals(username)).findAny();
-        }
-    }
-
-    public static Optional<Player> getPlayerBySession(Session session) {
-        synchronized (Game.players) {
-            return players.stream().filter(p -> p.getSession().equals(session)).findAny();
-        }
-    }
-
-    public static boolean isUsernameInUse(String username) {
-        return isUsernameConnecting(username) || isUsernameConnected(username);
-    }
-
-    private static boolean isUsernameConnecting(String username) {
-        synchronized (connectingPlayers) {
-            return connectingPlayers.stream().anyMatch(p -> p.getUsername().equals(username));
-        }
-    }
-
-    private static boolean isUsernameConnected(String username) {
-        synchronized (players) {
-            return players.stream().anyMatch(p -> p.getUsername().equals(username));
-        }
-    }
-
 }
