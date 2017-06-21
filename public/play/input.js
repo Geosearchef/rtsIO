@@ -23,6 +23,10 @@ function input(d) {
     if(Key.isDown(Key.UP)) centerMoveDir.y -= 1;
     if(Key.isDown(Key.RIGHT)) centerMoveDir.x += 1;
     if(Key.isDown(Key.DOWN)) centerMoveDir.y += 1;
+    if(Key.isDown('A'.charCodeAt(0))) centerMoveDir.x -= 1;
+    if(Key.isDown('W'.charCodeAt(0))) centerMoveDir.y -= 1;
+    if(Key.isDown('D'.charCodeAt(0))) centerMoveDir.x += 1;
+    if(Key.isDown('S'.charCodeAt(0))) centerMoveDir.y += 1;
     if(Mouse.x < MAP_MOVE_BORDER_SIZE) centerMoveDir.x -= 1;
     if(Mouse.y < MAP_MOVE_BORDER_SIZE) centerMoveDir.y -= 1;
     if(Mouse.x > canvas.width - MAP_MOVE_BORDER_SIZE) centerMoveDir.x += 1;
