@@ -1,0 +1,53 @@
+package de.geosearchef.rtsIO.util;
+
+import lombok.Getter;
+import lombok.Setter;
+
+public class Vector {
+    //TODO: public? can it be serialized if public?
+    @Getter @Setter private float x;
+    @Getter @Setter private float y;
+
+    public Vector(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Vector() {
+        this.x = 0f;
+        this.y = 0f;
+    }
+
+    public Vector(Vector src) {
+        this.x = src.x;
+        this.y = src.y;
+    }
+
+    public Vector add(Vector v) {
+        return new Vector(this.x + v.x, this.y + v.y);
+    }
+
+    public Vector sub(Vector v) {
+        return new Vector(this.x - v.x, this.y - v.y);
+    }
+
+    public Vector scale(float s) {
+        return new Vector(this.x * s, this.y * s);
+    }
+
+    public Vector negate() {
+        return new Vector(-this.x, -this.y);
+    }
+
+    public float lengthSquared() {
+        return this.x * this.x + this.y * this.y;
+    }
+
+    public float length() {
+        return (float) Math.sqrt(this.lengthSquared());
+    }
+
+    public Vector normalise() {
+        return this.scale(1f / this.length());
+    }
+}

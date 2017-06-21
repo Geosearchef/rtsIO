@@ -1,7 +1,7 @@
 package de.geosearchef.rtsIO.json.units;
 
 import de.geosearchef.rtsIO.json.Message;
-import de.geosearchef.rtsIO.json.Vector;
+import de.geosearchef.rtsIO.util.Vector;
 import lombok.Data;
 
 @Data
