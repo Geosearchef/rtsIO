@@ -9,10 +9,10 @@ var Key = {
 };
 window.addEventListener('keydown', Key.onKeyDown);
 window.addEventListener('keyup', Key.onKeyUp);
+
 var Mouse = {x: canvas.width / 2, y : canvas.height / 2};
 window.addEventListener('mousemove', function(event) {Mouse.x = event.clientX; Mouse.y = event.clientY});
 window.addEventListener('mouseout', function(event) {Mouse.x = canvas.width / 2; Mouse.y = canvas.height / 2});
-
 
 
 function input(d) {
@@ -34,3 +34,9 @@ function input(d) {
 
     center.setAdd(centerMoveDir.scale(d * MAP_MOVE_SPEED));
 }
+
+window.addEventListener('mousedown', function(event) {
+    if(event.button == 2) {
+        moveUnits(screenToMapSpace(new Vector(event.clientX, event.clientY)).add(new Vector(0.5, 0.5)));//TODO: unit size instead of 0.5
+    }
+});

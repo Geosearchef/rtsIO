@@ -61,7 +61,7 @@ public enum WebSocket {
             final JSONObject message = (JSONObject) new JSONParser().parse(msg);
             System.out.println(msg);
 
-            if (Objects.equals((String) message.get("type"), "login")) {
+            if (Objects.equals(message.get("type"), "login")) {
                 //Login
                 try {
                     PlayerManager.attemptLogin((String) message.get("username"), (String) message.get("token"), session);

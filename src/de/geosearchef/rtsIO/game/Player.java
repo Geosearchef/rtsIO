@@ -7,15 +7,21 @@ import de.geosearchef.rtsIO.json.units.NewUnitMessage;
 import de.geosearchef.rtsIO.util.Vector;
 import lombok.Getter;
 import org.eclipse.jetty.websocket.api.Session;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import de.geosearchef.rtsIO.websocket.WebSocket;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class Player {
 
@@ -40,18 +46,33 @@ public class Player {
         scheduleLoginTimeout();
     }
 
+
+    //TODO this is called async and doen't throw any exceptions, FIX!!!
     public void onMessage(JSONObject message) {
-        //TODO: process
         switch((String)message.get("type")) {
 
-            case "whatever": {
+            case "moveUnits": {
+                JSONArray unitIDArray = (JSONArray) message.get("unitIDs");
+                HashSet<Integer> unitIDs = unitIDArray.stream()
+                        .mapToInt(o -> Integer.parseInt(o.toString()))
+                        .boxed()
+                        .collect(Collectors.toCollection(HashSet::new));
 
+                Vector dest = new Vector((JSONObject) message.get("dest"));
+
+                synchronized (Game.units) {
+                    Game.units.stream()
+                            .filter(u -> u.getPlayer() == this && unitIDs.contains(u.getUnitID()))
+                            .forEach(u -> u.move(dest));
+                }
 
                 break;
             }
 
         }
     }
+
+
 
     //attempts login of player via token over websocket
     public void login(String token, Session session) {
@@ -90,7 +111,7 @@ public class Player {
 
         //Send all units to this player
         synchronized (Game.units) {
-            Game.units.forEach(u -> this.send(new NewUnitMessage(u.getPlayer().getPlayerID(), u.getUnitID(), u.getUnitType(), u.getPos(), u.getVel(), u.getHp())));
+            Game.units.forEach(u -> this.send(new NewUnitMessage(u.getPlayer().getPlayerID(), u.getUnitID(), u.getUnitType(), u.getPos(), u.getVel(), u.getDest(), u.getHp())));
         }
     }
 
@@ -110,8 +131,6 @@ public class Player {
     public boolean isLoggedIn() {
         return isConnected();
     }
-
-
 
     public void scheduleLoginTimeout() {
         scheduler.schedule(this::checkLoginTimeout, LOGIN_TIME_OUT, TimeUnit.MILLISECONDS);

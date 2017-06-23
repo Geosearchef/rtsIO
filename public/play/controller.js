@@ -17,7 +17,11 @@ var units = new Map();
 
 function update(d) {
     units.forEach(function(unit) {
-        unit.pos.setAdd(unit.vel.scale(d));
+        var travel = unit.vel.scale(d);
+        if(travel.lengthSquared() >= unit.pos.sub(unit.dest).lengthSquared())
+            unit.vel = new Vector(0, 0);
+        else
+            unit.pos.setAdd(travel);
     });
 }
 
@@ -30,12 +34,20 @@ function loggedIn() {
 
 //maybe outsource to parser???
 function onNewUnitMessage(msg) {
-    var unit = new Unit(msg.playerID, msg.unitID, msg.unitType, cloneVector(msg.pos), cloneVector(msg.vel), msg.hp);
-    units.set(msg.unitID, unit);
-}
+    var unit = new Unit(msg.playerID, msg.unitID, msg.unitType, cloneVector(msg.pos), cloneVector(msg.vel), cloneVector(msg.dest), msg.hp);
+    units.set(msg.unitID, unit);}
+
 
 function onDeleteUnit(id) {
+    units.delete(id);
+}
 
+function onUpdateUnit(msg) {
+    var unit = units.get(msg.unitID);
+    unit.pos = cloneVector(msg.pos);
+    unit.vel = cloneVector(msg.vel);
+    unit.dest = cloneVector(msg.dest);
+    unit.hp = msg.hp;
 }
 
 function onPlayerConnect(id, username) {
@@ -44,6 +56,18 @@ function onPlayerConnect(id, username) {
 
 function onPlayerDisconnect(id) {
     players.delete(id);
+}
+
+
+
+function moveUnits(dest) {
+    var unitIDs = [];
+    units.forEach(function(unit) {
+        if(unit.selected) {
+            unitIDs.push(unit.unitID);
+        }
+    });
+    send({type: "moveUnits", unitIDs: unitIDs, dest: dest})
 }
 
 

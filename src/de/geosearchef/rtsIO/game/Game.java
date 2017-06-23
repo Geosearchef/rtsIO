@@ -19,7 +19,7 @@ public class Game {
         synchronized (units) {
             units.add(unit);
         }
-        PlayerManager.broadcastPlayers(new NewUnitMessage(unit.getPlayer().getPlayerID(), unit.getUnitID(), unit.getUnitType(), unit.getPos(), unit.getVel(), unit.getHp()));
+        PlayerManager.broadcastPlayers(new NewUnitMessage(unit.getPlayer().getPlayerID(), unit.getUnitID(), unit.getUnitType(), unit.getPos(), unit.getVel(), unit.getDest(), unit.getHp()));
     }
 
     public static void removeUnit(Unit unit) {

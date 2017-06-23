@@ -69,6 +69,11 @@ public class PlayerManager {
             players.remove(player);
         }
 
+        //Remove all units of this player
+        synchronized (Game.units) {
+            Game.units.stream().filter(u -> u.getPlayer() == player).forEach(u -> Game.units.remove(u));
+        }
+
         logger.info(player.getUsername() + " disconnected");
         broadcastPlayers(new PlayerDisconnectMessage(player.getPlayerID()));
     }

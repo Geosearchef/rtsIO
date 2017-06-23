@@ -2,6 +2,7 @@ package de.geosearchef.rtsIO.util;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.json.simple.JSONObject;
 
 public class Vector {
     //TODO: public? can it be serialized if public?
@@ -21,6 +22,11 @@ public class Vector {
     public Vector(Vector src) {
         this.x = src.x;
         this.y = src.y;
+    }
+
+    public Vector(JSONObject json) {
+        this.x = Float.parseFloat(json.get("x").toString());
+        this.y = Float.parseFloat(json.get("y").toString());
     }
 
     public Vector add(Vector v) {
