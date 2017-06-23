@@ -1,6 +1,7 @@
 package de.geosearchef.rtsIO;
 
 import de.geosearchef.rtsIO.api.Api;
+import de.geosearchef.rtsIO.game.Updater;
 import de.geosearchef.rtsIO.js.JSCombiner;
 import de.geosearchef.rtsIO.websocket.WebSocket;
 import org.slf4j.Logger;
@@ -35,5 +36,7 @@ public class Main {
 
         //JS file is automatically combined server sided
         get("/play/gameScript.js", (req, res) -> JSCombiner.getCombinedJS());
+
+        Updater.init();
     }
 }

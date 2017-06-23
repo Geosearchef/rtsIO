@@ -41,7 +41,7 @@ function render(d) {
     }
     ctx.stroke();
 
-    ctx.drawImage(test, Math.floor(screenToMapSpace(Mouse).x) * CELL_SCALE, Math.floor(screenToMapSpace(Mouse).y) * CELL_SCALE);
+    //ctx.drawImage(test, Math.floor(screenToMapSpace(Mouse).x) * CELL_SCALE, Math.floor(screenToMapSpace(Mouse).y) * CELL_SCALE);
 
     //render units
     units.forEach(function (unit) {

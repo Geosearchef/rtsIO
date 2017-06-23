@@ -18,10 +18,12 @@ var units = new Map();
 function update(d) {
     units.forEach(function(unit) {
         var travel = unit.vel.scale(d);
-        if(travel.lengthSquared() >= unit.pos.sub(unit.dest).lengthSquared())
+        if(travel.lengthSquared() >= unit.pos.sub(unit.dest).lengthSquared()) {
             unit.vel = new Vector(0, 0);
-        else
+            unit.pos = cloneVector(unit.dest);
+        } else {
             unit.pos.setAdd(travel);
+        }
     });
 }
 
