@@ -51,7 +51,10 @@ public class Unit {
     }
 
 
-
+    @Override
+    public int hashCode() {
+        return unitID;
+    }
 
     public float getMoveSpeed() {return 3f;}
 }

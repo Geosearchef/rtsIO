@@ -1,5 +1,5 @@
 
-function Unit(playerID, unitID, unitType, pos, dest, vel, hp) {
+function Unit(playerID, unitID, unitType, pos, vel, dest, hp) {
     this.playerID = playerID;
     this.unitID = unitID;
     this.unitType = unitType;

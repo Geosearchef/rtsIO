@@ -2,6 +2,7 @@
 
 const VISION_SIZE_CELLS = 30;
 
+const MAP_MOVE_BORDER = false;
 const MAP_MOVE_BORDER_SIZE = 30;
 const MAP_MOVE_SPEED = 5;
 

@@ -5,6 +5,7 @@ import de.geosearchef.rtsIO.json.Message;
 import de.geosearchef.rtsIO.json.PlayerConnectMessage;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
 import de.geosearchef.rtsIO.util.Vector;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.simple.JSONArray;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+@EqualsAndHashCode
 public class Player {
 
     private static final int LOGIN_TIME_OUT = 10 * 1000;//name reserve time
@@ -146,5 +148,10 @@ public class Player {
                 PlayerManager.connectingPlayers.remove(this);
             }
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return playerID;
     }
 }

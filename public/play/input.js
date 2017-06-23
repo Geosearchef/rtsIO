@@ -27,16 +27,16 @@ function input(d) {
     if(Key.isDown('W'.charCodeAt(0))) centerMoveDir.y -= 1;
     if(Key.isDown('D'.charCodeAt(0))) centerMoveDir.x += 1;
     if(Key.isDown('S'.charCodeAt(0))) centerMoveDir.y += 1;
-    if(Mouse.x < MAP_MOVE_BORDER_SIZE) centerMoveDir.x -= 1;
-    if(Mouse.y < MAP_MOVE_BORDER_SIZE) centerMoveDir.y -= 1;
-    if(Mouse.x > canvas.width - MAP_MOVE_BORDER_SIZE) centerMoveDir.x += 1;
-    if(Mouse.y > canvas.height - MAP_MOVE_BORDER_SIZE) centerMoveDir.y += 1;
+    if(MAP_MOVE_BORDER && Mouse.x < MAP_MOVE_BORDER_SIZE) centerMoveDir.x -= 1;
+    if(MAP_MOVE_BORDER && Mouse.y < MAP_MOVE_BORDER_SIZE) centerMoveDir.y -= 1;
+    if(MAP_MOVE_BORDER && Mouse.x > canvas.width - MAP_MOVE_BORDER_SIZE) centerMoveDir.x += 1;
+    if(MAP_MOVE_BORDER && Mouse.y > canvas.height - MAP_MOVE_BORDER_SIZE) centerMoveDir.y += 1;
 
     center.setAdd(centerMoveDir.scale(d * MAP_MOVE_SPEED));
 }
 
 window.addEventListener('mousedown', function(event) {
     if(event.button == 2) {
-        moveUnits(screenToMapSpace(new Vector(event.clientX, event.clientY)).add(new Vector(0.5, 0.5)));//TODO: unit size instead of 0.5
+        moveUnits(screenToMapSpace(new Vector(event.clientX, event.clientY)).add(new Vector(-0.5, -0.5)));//TODO: unit size instead of 0.5
     }
 });

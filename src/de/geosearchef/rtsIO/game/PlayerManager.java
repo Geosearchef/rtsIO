@@ -71,7 +71,7 @@ public class PlayerManager {
 
         //Remove all units of this player
         synchronized (Game.units) {
-            Game.units.stream().filter(u -> u.getPlayer() == player).forEach(u -> Game.units.remove(u));
+            Game.units.stream().filter(u -> u.getPlayer() == player).forEach(Game::removeUnit);
         }
 
         logger.info(player.getUsername() + " disconnected");

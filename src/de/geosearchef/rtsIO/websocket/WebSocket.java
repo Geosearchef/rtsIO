@@ -59,7 +59,7 @@ public enum WebSocket {
     public void onMessage(Session session, String msg) {
         try {
             final JSONObject message = (JSONObject) new JSONParser().parse(msg);
-            System.out.println(msg);
+            logger.debug(msg);
 
             if (Objects.equals(message.get("type"), "login")) {
                 //Login
