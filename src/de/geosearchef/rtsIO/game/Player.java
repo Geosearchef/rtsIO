@@ -47,7 +47,7 @@ public class Player {
     }
 
 
-    //TODO this is called async and doen't throw any exceptions, FIX!!!
+    //TODO this is called async and doesn't throw any exceptions, FIX!!!
     public void onMessage(JSONObject message) {
         switch((String)message.get("type")) {
 
@@ -106,7 +106,9 @@ public class Player {
 
         //Send all players to this player
         synchronized (PlayerManager.players) {
-            PlayerManager.players.forEach(p -> this.send(new PlayerConnectMessage(p.getPlayerID(), p.getUsername())));
+            PlayerManager.players.stream()
+                    .filter(p -> p != this) //own player will broadcast later on to everyone
+                    .forEach(p -> this.send(new PlayerConnectMessage(p.getPlayerID(), p.getUsername())));
         }
 
         //Send all units to this player
