@@ -53,7 +53,7 @@ public class Player {
     public void onMessage(JSONObject message) {
         switch((String)message.get("type")) {
 
-            case "moveUnits": {
+            case "moveUnits": {System.out.println(message.toJSONString());
                 JSONArray unitIDArray = (JSONArray) message.get("unitIDs");
                 HashSet<Integer> unitIDs = unitIDArray.stream()
                         .mapToInt(o -> Integer.parseInt(o.toString()))

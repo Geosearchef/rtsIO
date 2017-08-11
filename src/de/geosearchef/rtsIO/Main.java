@@ -13,7 +13,7 @@ import static spark.Spark.*;
 
 public class Main {
 
-    public static boolean PRODUCTION = true;
+    public static boolean PRODUCTION = false;
     public static final int PORT = 4567;
 
     public static void main(String args[]) {

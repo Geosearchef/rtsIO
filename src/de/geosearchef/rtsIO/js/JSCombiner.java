@@ -15,7 +15,8 @@ public class JSCombiner {
         for(String fileName : files) {
             Scanner scan = new Scanner(new File("public/play/" + fileName));
             while(scan.hasNext()) {
-                s.append(scan.nextLine() + "\n");
+                String nextLine = scan.nextLine();
+                s.append(nextLine.split("////")[0] + "\n");
             }
             scan.close();
         }
