@@ -71,7 +71,9 @@ public enum WebSocket {
             } else {
                 //Default message parsing
                 Optional<Player> player = PlayerManager.getPlayerBySession(session);
-                player.ifPresent(p -> CompletableFuture.runAsync(() -> p.onMessage(message)));
+                player.ifPresent(p -> CompletableFuture.runAsync(() -> {
+                    try{p.onMessage(message);} catch(Exception e){e.printStackTrace();}
+                }));
             }
 
         } catch (ParseException e) {

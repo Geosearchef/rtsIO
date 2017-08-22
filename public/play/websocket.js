@@ -6,8 +6,8 @@ function onSocketMessage(event) {
 
     switch (msg.type) {
         case "loginSuccess":
-            username = msg.username;
-            playerID = msg.id;
+            ownUsername = msg.username;
+            ownPlayerID = msg.id;
             connected = true;
             loggedIn();
             break;

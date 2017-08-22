@@ -6,8 +6,11 @@ const MAP_MOVE_BORDER = false;
 const MAP_MOVE_BORDER_SIZE = 30;
 const MAP_MOVE_SPEED = 5;
 
+const MAP_GRAB_FACTOR = 1.0;
+
 var center = new Vector(MAP_SIZE.x / 2 + 0.5, MAP_SIZE.y / 2 + 0.5);
-center.screen = function() {return new Vector(center.x * CELL_SCALE, center.y * CELL_SCALE)};//this is only virtual screen
+center.screen = function() {return new Vector(center.x * CELL_SCALE, center.y * CELL_SCALE);};//this is only virtual screen
+//actual rendered pixels are scaled using scaleFactor
 //TODO: update
 
 

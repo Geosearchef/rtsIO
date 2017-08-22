@@ -52,14 +52,13 @@ public class Player {
     //TODO this is called async and doesn't throw any exceptions, FIX!!!
     public void onMessage(JSONObject message) {
         switch((String)message.get("type")) {
-
             case "moveUnits": {System.out.println(message.toJSONString());
                 JSONArray unitIDArray = (JSONArray) message.get("unitIDs");
                 HashSet<Integer> unitIDs = unitIDArray.stream()
                         .mapToInt(o -> Integer.parseInt(o.toString()))
                         .boxed()
                         .collect(Collectors.toCollection(HashSet::new));
-
+                
                 Vector dest = new Vector((JSONObject) message.get("dest"));
 
                 synchronized (Game.units) {

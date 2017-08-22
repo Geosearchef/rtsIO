@@ -1,5 +1,4 @@
 
-
 var Key = {
     pressed: new Array(256).fill(false),
     LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40,
@@ -35,8 +34,42 @@ function input(d) {
     center.setAdd(centerMoveDir.scale(d * MAP_MOVE_SPEED));
 }
 
+var mouseRightDown = false;
+var isMapMoving = false;
+var currentMousePos = new Vector(0, 0);
 window.addEventListener('mousedown', function(event) {
-    if(event.button == 2) {
-        moveUnits(screenToMapSpace(new Vector(event.clientX, event.clientY)).add(new Vector(-0.5, -0.5)));//TODO: unit size instead of 0.5
+
+    //Start selection
+    if(event.button === 0) {
+
+    }
+
+    //Grab map / Move unit
+    if(event.button === 2) {
+        mouseRightDown = true;
     }
 });
+
+window.addEventListener('mousemove', function(event) {
+    var newPos = new Vector(event.clientX, event.clientY);
+
+    if(mouseRightDown) {
+        isMapMoving = true;
+        var diff = screenToMapSpace(currentMousePos).sub(screenToMapSpace(newPos));
+
+        center.setAdd(diff.scale(MAP_GRAB_FACTOR));
+    }
+
+    currentMousePos = newPos;
+})
+
+window.addEventListener('mouseup', function(event) {
+    if(event.button === 2) {
+        //Movement order
+        if(! isMapMoving) {
+            moveUnits(screenToMapSpace(currentMousePos).add(new Vector(-0.5, -0.5)));//TODO: unit size instead of 0.5
+        }
+        isMapMoving = false;
+        mouseRightDown = false;
+    }
+})

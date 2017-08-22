@@ -6,8 +6,8 @@ const MAP_SIZE = {x:100, y:100};
 
 
 var connected = false;//did the login succeed?
-var username;//own username
-var playerID;//own playerID
+var ownUsername;//own username
+var ownPlayerID;//own playerID
 
 var players = new Map();
 var units = new Map();

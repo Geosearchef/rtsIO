@@ -8,7 +8,8 @@ function Unit(playerID, unitID, unitType, pos, vel, dest, hp) {
     this.dest = dest;
     this.hp = hp;
 
-    this.selected = true;
+    if(ownPlayerID === playerID)
+        this.selected = true;
 }
 
 function Player(playerID, username) {
