@@ -1,9 +1,6 @@
 package de.geosearchef.rtsIO.game;
 
-import de.geosearchef.rtsIO.json.LoginSuccessMessage;
-import de.geosearchef.rtsIO.json.Message;
-import de.geosearchef.rtsIO.json.PlayerConnectMessage;
-import de.geosearchef.rtsIO.json.ResourceAmountUpdateMessage;
+import de.geosearchef.rtsIO.json.*;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
 import de.geosearchef.rtsIO.util.Vector;
 import lombok.EqualsAndHashCode;
@@ -26,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-@EqualsAndHashCode
 public class Player {
 
     private static final int LOGIN_TIME_OUT = 10 * 1000;//name reserve time
@@ -120,6 +116,7 @@ public class Player {
 
     private void sendGameInfo() {
         //Send game information to new connecting player
+        this.send(new GameInfoMessage(Game.MAP_SIZE));
 
         //Send all players to this player
         synchronized (PlayerManager.players) {

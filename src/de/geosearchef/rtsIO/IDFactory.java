@@ -3,6 +3,7 @@ package de.geosearchef.rtsIO;
 public class IDFactory {
     private static int currentPlayerID;
     private static int currentUnitID;
+    private static int currentGemID;
 
 
     public static synchronized int generatePlayerID() {
@@ -10,5 +11,8 @@ public class IDFactory {
     }
     public static synchronized int generateUnitID() {
         return currentUnitID++;
+    }
+    public static synchronized int generateGemID() {
+        return currentGemID++;
     }
 }

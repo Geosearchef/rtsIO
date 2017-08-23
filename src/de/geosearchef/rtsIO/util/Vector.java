@@ -60,4 +60,9 @@ public class Vector {
     public float dot(Vector v) {
         return v.x * this.x + v.y * this.y;
     }
+
+    @Override
+    public String toString() {
+        return "Vector: [" + x + "|" + y +  "]";
+    }
 }

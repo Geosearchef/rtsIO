@@ -2,7 +2,7 @@ window.onload = init;//set init() to be executed on page loading
 
 const CELL_SCALE = 50.0;
 
-const MAP_SIZE = {x:100, y:100};
+var MAP_SIZE = {x:100, y:100};//SET ON GAME INFO
 
 
 var connected = false;//did the login succeed?

@@ -12,6 +12,10 @@ function onSocketMessage(event) {
             loggedIn();
             break;
 
+        case "gameInfo":
+            MAP_SIZE.x = msg.mapSize.x;
+            MAP_SIZE.y = msg.mapSize.y;
+
         case "playerConnect":
             onPlayerConnect(msg.id, msg.username);
             break;

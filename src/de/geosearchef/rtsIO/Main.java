@@ -1,6 +1,7 @@
 package de.geosearchef.rtsIO;
 
 import de.geosearchef.rtsIO.api.Api;
+import de.geosearchef.rtsIO.game.Game;
 import de.geosearchef.rtsIO.game.Updater;
 import de.geosearchef.rtsIO.js.JSCombiner;
 import de.geosearchef.rtsIO.websocket.WebSocket;
@@ -26,6 +27,7 @@ public class Main {
         if(!PRODUCTION)
             logger.info("DEBUG MODE ACTIVATED");
 
+        Game.init();
 
         port(PORT);
         //Set location of external, static data (html, js)
