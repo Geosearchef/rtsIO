@@ -45,15 +45,30 @@ function render(d) {
     }
     ctx.stroke();
 
-    //ctx.drawImage(test, Math.floor(screenToMapSpace(Mouse).x) * CELL_SCALE, Math.floor(screenToMapSpace(Mouse).y) * CELL_SCALE);
+
+
+
+    //render unit movement lines
+    ctx.beginPath();
+    ctx.setLineDash([10,10]);
+    units.forEach(function (unit) {
+        if(unit.dest != null) {
+            ctx.moveTo((unit.pos.x + 0.5) * CELL_SCALE, (unit.pos.y + 0.5) * CELL_SCALE);
+            ctx.lineTo((unit.dest.x + 0.5) * CELL_SCALE, (unit.dest.y + 0.5) * CELL_SCALE);
+        }
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
 
     //render units
     units.forEach(function (unit) {
         ctx.drawImage(test, unit.pos.x * CELL_SCALE, unit.pos.y * CELL_SCALE);//TODO unit center?
     });
 
+
     ctx.restore();
 }
+
 
 var scaleFactor = 1;
 var oldWidth = 0;

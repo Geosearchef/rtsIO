@@ -34,14 +34,23 @@ function input(d) {
     center.setAdd(centerMoveDir.scale(d * MAP_MOVE_SPEED));
 }
 
+
+
+
+var currentMousePos = new Vector(0, 0);
+
+//Selection
+var selectionStartPos = null;
+
+//Map movement
 var mouseRightDown = false;
 var isMapMoving = false;
-var currentMousePos = new Vector(0, 0);
+
 window.addEventListener('mousedown', function(event) {
 
     //Start selection
     if(event.button === 0) {
-
+        selectionStartPos = new Vector(event.clientX, event.clientY);
     }
 
     //Grab map / Move unit
@@ -64,6 +73,13 @@ window.addEventListener('mousemove', function(event) {
 })
 
 window.addEventListener('mouseup', function(event) {
+
+    if(event.button === 0) {
+        //TODO: calculate selection
+
+        selectionStartPos = null;
+    }
+
     if(event.button === 2) {
         //Movement order
         if(! isMapMoving) {
