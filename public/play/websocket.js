@@ -31,6 +31,10 @@ function onSocketMessage(event) {
         case "updateUnit":
             onUpdateUnit(msg);
             break;
+
+        case "resourceAmountUpdate":
+            ownResourceAmount = msg.resourceAmount;
+            break;
     }
 }
 

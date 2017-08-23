@@ -9,6 +9,8 @@ var connected = false;//did the login succeed?
 var ownUsername;//own username
 var ownPlayerID;//own playerID
 
+var ownResourceAmount = 0;
+
 var players = new Map();
 var units = new Map();
 

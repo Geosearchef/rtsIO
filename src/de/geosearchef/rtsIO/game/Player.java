@@ -3,10 +3,12 @@ package de.geosearchef.rtsIO.game;
 import de.geosearchef.rtsIO.json.LoginSuccessMessage;
 import de.geosearchef.rtsIO.json.Message;
 import de.geosearchef.rtsIO.json.PlayerConnectMessage;
+import de.geosearchef.rtsIO.json.ResourceAmountUpdateMessage;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
 import de.geosearchef.rtsIO.util.Vector;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -38,6 +40,8 @@ public class Player {
     @Getter private boolean connected;//needs to be logged in, else false
 
     @Getter private Session session;
+
+    @Getter private int resourceAmount = 0;
 
     public Player(int id, String username, String loginToken) {
         this.playerID = id;
@@ -72,6 +76,18 @@ public class Player {
 
         }
     }
+
+
+
+
+    public void addResources(int amount) {setResourceAmount(this.resourceAmount + amount);}
+    public void removeResources(int amount) {setResourceAmount(this.resourceAmount - amount);}
+    public void setResourceAmount(int amount) {
+        this.resourceAmount = amount;
+        send(new ResourceAmountUpdateMessage(this.resourceAmount));
+    }
+
+
 
 
 
@@ -118,7 +134,7 @@ public class Player {
         }
     }
 
-
+    //This is async
     public void send(Message message) {send(message.toJson());}
     public void send(JSONObject message) {send(message.toJSONString());}
     public void send(String message) {

@@ -18,24 +18,24 @@ center.screen = function() {return new Vector(center.x * CELL_SCALE, center.y * 
 
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");//relative to center
-var ctxScreen = canvas.getContext("2d");//relative to screen
 
 
 function render(d) {
     handleResize();
-    ctxScreen.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
     // ctx.translate(-50, -50);
     ctx.scale(scaleFactor, scaleFactor);
     ctx.translate(-(center.screen().x - (canvas.width / 2 / scaleFactor)), -(center.screen().y - (canvas.height / 2 / scaleFactor)));
 
-
-    renderGui();
+    renderUnderlay();
 
     renderUnits();
 
+    renderOverlay();
 
     ctx.restore();
+    renderGui();
 }
 
 
