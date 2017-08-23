@@ -51,12 +51,9 @@ function render(d) {
     ctx.fillStyle = "black";
     ctx.globalAlpha = 0.2;
     if(selectionStartPos != null) {
-        var corners = [selectionStartPos, screenToMapSpace(currentMousePos)];
-        var topLeftCorner = new Vector(Math.min(corners[0].x, corners[1].x), Math.min(corners[0].y, corners[1].y)).scale(CELL_SCALE);
-        var size = new Vector(Math.abs(corners[0].x - corners[1].x), Math.abs(corners[0].y - corners[1].y)).scale(CELL_SCALE);
-        ctx.fillRect(topLeftCorner.x, topLeftCorner.y, size.x, size.y);
-        console.log(topLeftCorner.x + " " + topLeftCorner.y + "     " + size.x + " " + size.y);
-        // ctx.fillRect(40 * CELL_SCALE, 40 * CELL_SCALE, CELL_SCALE * 20, CELL_SCALE * 20);
+        var rect = new Rect(selectionStartPos, screenToMapSpace(currentMousePos));
+        rect.setScale(CELL_SCALE);
+        ctx.fillRect(rect.topLeftCorner.x, rect.topLeftCorner.y, rect.size.x, rect.size.y);
     }
     ctx.globalAlpha = 1.0;
 

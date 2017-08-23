@@ -75,7 +75,10 @@ window.addEventListener('mousemove', function(event) {
 window.addEventListener('mouseup', function(event) {
 
     if(event.button === 0) {
-        //TODO: calculate selection
+        //Apply selection
+        units.forEach(function (unit) {
+            unit.selected = unit.playerID == ownPlayerID && unit.pos.containedInRect(new Rect(selectionStartPos, screenToMapSpace(new Vector(event.clientX, event.clientY))));
+        });
 
         selectionStartPos = null;
     }
