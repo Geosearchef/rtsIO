@@ -40,7 +40,6 @@ public class Game {
 
     public static void init() {
         Gem.generateGemSpawners();
-        gems.stream().map(gem -> gem.getPos()).forEach(System.out::println);
     }
 
 
