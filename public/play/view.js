@@ -20,9 +20,7 @@ var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");//relative to center
 var ctxScreen = canvas.getContext("2d");//relative to screen
 
-var test = new Image();
-test.src = "img/test.svg";
-//TODO: split render method into multiple methods/files
+
 function render(d) {
     handleResize();
     ctxScreen.clearRect(0, 0, canvas.width, canvas.height);
@@ -31,52 +29,10 @@ function render(d) {
     ctx.scale(scaleFactor, scaleFactor);
     ctx.translate(-(center.screen().x - (canvas.width / 2 / scaleFactor)), -(center.screen().y - (canvas.height / 2 / scaleFactor)));
 
-    //Render grid
-    ctx.strokeStyle = "#868686";
-    ctx.beginPath();
 
-    for(var x = (center.screen().x - canvas.width / 2 / scaleFactor)- ((center.screen().x - canvas.width / 2 / scaleFactor) % CELL_SCALE) + CELL_SCALE;x < center.screen().x + canvas.width / 2 / scaleFactor;x += CELL_SCALE) {
-        ctx.moveTo(x + 0.5, -10000/*center.screen().y - canvas.height / 2*/);
-        ctx.lineTo(x + 0.5, 10000/*center.screen().y + canvas.height / 2 / scaleFactor / scaleFactor*/);
-    }
-    for(var y = (center.screen().y - canvas.height / 2 / scaleFactor)- ((center.screen().y - canvas.height / 2 / scaleFactor) % CELL_SCALE) + CELL_SCALE;y < center.screen().y + canvas.height / 2 / scaleFactor;y += CELL_SCALE) {
-        ctx.moveTo(-10000, y + 0.5);
-        ctx.lineTo(10000, y + 0.5);
-    }
-    ctx.stroke();
+    renderGui();
 
-
-    //GUI
-    //render selection area
-    ctx.fillStyle = "black";
-    ctx.globalAlpha = 0.2;
-    if(selectionStartPos != null) {
-        var rect = new Rect(selectionStartPos, screenToMapSpace(currentMousePos));
-        rect.setScale(CELL_SCALE);
-        ctx.fillRect(rect.topLeftCorner.x, rect.topLeftCorner.y, rect.size.x, rect.size.y);
-    }
-    ctx.globalAlpha = 1.0;
-
-
-
-    //render unit movement lines
-    ctx.beginPath();
-    ctx.setLineDash([10,10]);
-    ctx.globalAlpha = 0.8;
-    units.forEach(function (unit) {
-        if(unit.dest != null) {
-            ctx.moveTo((unit.pos.x + 0.5) * CELL_SCALE, (unit.pos.y + 0.5) * CELL_SCALE);
-            ctx.lineTo((unit.dest.x + 0.5) * CELL_SCALE, (unit.dest.y + 0.5) * CELL_SCALE);
-        }
-    });
-    ctx.stroke();
-    ctx.globalAlpha = 1.0;
-    ctx.setLineDash([]);
-
-    //render units
-    units.forEach(function (unit) {
-        ctx.drawImage(test, unit.pos.x * CELL_SCALE, unit.pos.y * CELL_SCALE);//TODO unit center?
-    });
+    renderUnits();
 
 
     ctx.restore();
@@ -109,3 +65,8 @@ function screenToMapSpace(screen) {
     return new Vector((center.x - canvas.width / 2 / scaleFactor / CELL_SCALE) + screen.x / scaleFactor / CELL_SCALE, (center.y - canvas.height / 2 / scaleFactor / CELL_SCALE) + screen.y / scaleFactor / CELL_SCALE);
 }
 
+function loadImage(src) {
+    var image = new Image();
+    image.src = src;
+    return image;
+}
