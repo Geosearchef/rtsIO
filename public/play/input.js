@@ -40,7 +40,7 @@ function input(d) {
 var currentMousePos = new Vector(0, 0);
 
 //Selection
-var selectionStartPos = null;
+var selectionStartPos = null;//map space
 
 //Map movement
 var mouseRightDown = false;
@@ -50,7 +50,7 @@ window.addEventListener('mousedown', function(event) {
 
     //Start selection
     if(event.button === 0) {
-        selectionStartPos = new Vector(event.clientX, event.clientY);
+        selectionStartPos = screenToMapSpace(new Vector(event.clientX, event.clientY));
     }
 
     //Grab map / Move unit

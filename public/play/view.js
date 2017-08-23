@@ -11,7 +11,7 @@ const MAP_GRAB_FACTOR = 1.0;
 var center = new Vector(MAP_SIZE.x / 2 + 0.5, MAP_SIZE.y / 2 + 0.5);
 center.screen = function() {return new Vector(center.x * CELL_SCALE, center.y * CELL_SCALE);};//this is only virtual screen
 //actual rendered pixels are scaled using scaleFactor
-//TODO: update
+//TODO: SCREEN() IS NOT SCREEN SPACE; IT'S VIRTUAL SCREEN SPACE, (not scaled, not relative to map center)
 
 
 
@@ -22,7 +22,7 @@ var ctxScreen = canvas.getContext("2d");//relative to screen
 
 var test = new Image();
 test.src = "img/test.svg";
-
+//TODO: split render method into multiple methods/files
 function render(d) {
     handleResize();
     ctxScreen.clearRect(0, 0, canvas.width, canvas.height);
@@ -46,11 +46,26 @@ function render(d) {
     ctx.stroke();
 
 
+    //GUI
+    //render selection area
+    ctx.fillStyle = "black";
+    ctx.globalAlpha = 0.2;
+    if(selectionStartPos != null) {
+        var corners = [selectionStartPos, screenToMapSpace(currentMousePos)];
+        var topLeftCorner = new Vector(Math.min(corners[0].x, corners[1].x), Math.min(corners[0].y, corners[1].y)).scale(CELL_SCALE);
+        var size = new Vector(Math.abs(corners[0].x - corners[1].x), Math.abs(corners[0].y - corners[1].y)).scale(CELL_SCALE);
+        ctx.fillRect(topLeftCorner.x, topLeftCorner.y, size.x, size.y);
+        console.log(topLeftCorner.x + " " + topLeftCorner.y + "     " + size.x + " " + size.y);
+        // ctx.fillRect(40 * CELL_SCALE, 40 * CELL_SCALE, CELL_SCALE * 20, CELL_SCALE * 20);
+    }
+    ctx.globalAlpha = 1.0;
+
 
 
     //render unit movement lines
     ctx.beginPath();
     ctx.setLineDash([10,10]);
+    ctx.globalAlpha = 0.8;
     units.forEach(function (unit) {
         if(unit.dest != null) {
             ctx.moveTo((unit.pos.x + 0.5) * CELL_SCALE, (unit.pos.y + 0.5) * CELL_SCALE);
@@ -58,6 +73,7 @@ function render(d) {
         }
     });
     ctx.stroke();
+    ctx.globalAlpha = 1.0;
     ctx.setLineDash([]);
 
     //render units
