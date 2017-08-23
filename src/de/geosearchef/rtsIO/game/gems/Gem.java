@@ -8,6 +8,7 @@ import lombok.Getter;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Gem {
 
@@ -33,7 +34,9 @@ public class Gem {
     //is synchronized in update
     public Optional<Gem> generateNewGem(float d) {
 
-        children.stream().filter(gem -> !Game.gems.contains(gem)).forEach(children::remove);
+        children.stream().filter(gem -> !Game.gems.contains(gem))
+                .collect(Collectors.toCollection(HashSet::new))
+                .forEach(children::remove);
 
         if(children.size() < 5 && Math.random() < (0.2 - 0.04 * children.size()) * d) {
             double angle = Math.random() * Math.PI * 2.0;
@@ -47,12 +50,18 @@ public class Gem {
         return Optional.empty();
     }
 
+    public float getResourceAmount() {
+        return 5.0f;
+    }
 
     @Override
     public int hashCode() {
         return id;
     }
 
+    public Vector getCenter() {
+        return pos.add(new Vector(spawner ? LARGE_GEM_SIZE / 2f : SMALL_GEM_SIZE / 2f, spawner ? LARGE_GEM_SIZE / 2f : SMALL_GEM_SIZE / 2f));
+    }
 
     //TODO guarantee this to terminate
     public static void generateGemSpawners() {

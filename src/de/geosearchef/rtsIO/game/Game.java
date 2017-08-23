@@ -1,6 +1,8 @@
 package de.geosearchef.rtsIO.game;
 
 import de.geosearchef.rtsIO.game.gems.Gem;
+import de.geosearchef.rtsIO.json.gems.DeleteGemMessage;
+import de.geosearchef.rtsIO.json.gems.NewGemMessage;
 import de.geosearchef.rtsIO.json.units.DeleteUnitMessage;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
 import de.geosearchef.rtsIO.util.Vector;
@@ -35,6 +37,24 @@ public class Game {
             units.remove(unit);
         }
         PlayerManager.broadcastPlayers(new DeleteUnitMessage(unit.getUnitID()));
+    }
+
+    //TODO: inconsitency between add/remove units and gems
+
+    public static void addGem(Gem gem) {
+        synchronized (gems) {
+            Game.gems.add(gem);
+        }
+        PlayerManager.broadcastPlayers(new NewGemMessage(gem.getId(), gem.getPos(), gem.isSpawner()));
+    }
+
+    public static void consumeGem(Gem gem, Unit unit) {
+        synchronized (gems) {
+            Game.gems.remove(gem);
+        }
+        PlayerManager.broadcastPlayers(new DeleteGemMessage(gem.getId()));
+
+        unit.getPlayer().addResources(gem.getResourceAmount());
     }
 
 

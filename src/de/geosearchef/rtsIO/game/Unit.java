@@ -1,9 +1,13 @@
 package de.geosearchef.rtsIO.game;
 
 import de.geosearchef.rtsIO.IDFactory;
+import de.geosearchef.rtsIO.game.gems.Gem;
 import de.geosearchef.rtsIO.json.units.UpdateUnitMessage;
 import de.geosearchef.rtsIO.util.Vector;
 import lombok.Data;
+
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 @Data
 public class Unit {
@@ -37,6 +41,16 @@ public class Unit {
             this.pos = this.pos.add(travel);
         }
 
+        //Check for collision with gem
+        synchronized (Game.gems) {
+            Game.gems.stream()
+                    .filter(g -> ! g.isSpawner())
+                    .filter(g -> this.getCenter().sub(g.getCenter()).length() <= (this.getSize() + Gem.SMALL_GEM_SIZE) / 2f)//this radius is based on the entities sides, not diagonals
+                    .collect(Collectors.toCollection(HashSet::new))//avoid concurrent modification
+                    .forEach(gem -> {
+                        Game.consumeGem(gem, this);
+                    });
+        }
     }
 
 
@@ -56,5 +70,14 @@ public class Unit {
         return unitID;
     }
 
+    //TODO
     public float getMoveSpeed() {return 3f;}
+
+    public float getSize() {
+        return 1.0f;//TODO DODODODO
+    }
+
+    public Vector getCenter() {
+        return pos.add(new Vector(0.5f, 0.5f));
+    }
 }

@@ -26,11 +26,8 @@ public class Updater {
                     gem.generateNewGem(d).ifPresent(newGems::add);
                 }
             }
-            newGems.forEach(gem -> {
-                Game.gems.add(gem);
-                PlayerManager.broadcastPlayers(new NewGemMessage(gem.getId(), gem.getPos(), gem.isSpawner()));
-            });
         }
+        newGems.forEach(Game::addGem);
     }
 
     private static long lastFrame = 0;

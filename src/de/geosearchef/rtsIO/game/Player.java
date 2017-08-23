@@ -38,7 +38,7 @@ public class Player {
 
     @Getter private Session session;
 
-    @Getter private int resourceAmount = 0;
+    @Getter private double resourceAmount = 0;
 
     public Player(int id, String username, String loginToken) {
         this.playerID = id;
@@ -77,11 +77,11 @@ public class Player {
 
 
 
-    public void addResources(int amount) {setResourceAmount(this.resourceAmount + amount);}
-    public void removeResources(int amount) {setResourceAmount(this.resourceAmount - amount);}
-    public void setResourceAmount(int amount) {
+    public void addResources(double amount) {setResourceAmount(this.resourceAmount + amount);}
+    public void removeResources(double amount) {setResourceAmount(this.resourceAmount - amount);}
+    public void setResourceAmount(double amount) {
         this.resourceAmount = amount;
-        send(new ResourceAmountUpdateMessage(this.resourceAmount));
+        this.sendResourceAmount();
     }
 
 
@@ -147,6 +147,10 @@ public class Player {
         try {
             WebSocket.INSTANCE.send(this.session, message);
         } catch(IOException e) {logger.warn("Could not send message to player: " + message, e);}
+    }
+
+    public void sendResourceAmount() {
+        this.send(new ResourceAmountUpdateMessage((int)this.resourceAmount));
     }
 
 
