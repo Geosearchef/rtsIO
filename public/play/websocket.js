@@ -13,8 +13,8 @@ function onSocketMessage(event) {
             break;
 
         case "gameInfo":
-            MAP_SIZE.x = msg.mapSize.x;
-            MAP_SIZE.y = msg.mapSize.y;
+            MAP_SIZE.set(new Vector(msg.mapSize.x, msg.mapSize.y));
+            center.set(new Vector(MAP_SIZE.x / 2 + 0.5, MAP_SIZE.y / 2 + 0.5));
 
         case "playerConnect":
             onPlayerConnect(msg.id, msg.username);
@@ -34,6 +34,14 @@ function onSocketMessage(event) {
 
         case "updateUnit":
             onUpdateUnit(msg);
+            break;
+
+        case "newGem":
+            onNewGem(msg.id, msg.pos, msg.spawner);
+            break;
+
+        case "deleteGem":
+            onDeleteGem(msg.id);
             break;
 
         case "resourceAmountUpdate":

@@ -16,3 +16,9 @@ function Player(playerID, username) {
     this.playerID = playerID;
     this.username = username;
 }
+
+function Gem(id, pos, spawner) {
+    this.id = id;
+    this.pos = pos;
+    this.spawner = spawner;
+}

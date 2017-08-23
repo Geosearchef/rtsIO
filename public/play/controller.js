@@ -2,7 +2,7 @@ window.onload = init;//set init() to be executed on page loading
 
 const CELL_SCALE = 50.0;
 
-var MAP_SIZE = {x:100, y:100};//SET ON GAME INFO
+var MAP_SIZE = new Vector(1, 1);//SET ON GAME INFO
 
 
 var connected = false;//did the login succeed?
@@ -13,6 +13,7 @@ var ownResourceAmount = 0;
 
 var players = new Map();
 var units = new Map();
+var gems = new Map();
 
 
 
@@ -39,7 +40,8 @@ function loggedIn() {
 //maybe outsource to parser???
 function onNewUnitMessage(msg) {
     var unit = new Unit(msg.playerID, msg.unitID, msg.unitType, cloneVector(msg.pos), cloneVector(msg.vel), cloneVector(msg.dest), msg.hp);
-    units.set(msg.unitID, unit);}
+    units.set(msg.unitID, unit);
+}
 
 
 function onDeleteUnit(id) {
@@ -52,6 +54,15 @@ function onUpdateUnit(msg) {
     unit.vel = cloneVector(msg.vel);
     unit.dest = cloneVector(msg.dest);
     unit.hp = msg.hp;
+}
+
+function onNewGem(id, pos, spawner) {
+    var gem = new Gem(id, pos, spawner);
+    gems.set(id, gem);
+}
+
+function onDeleteGem(id) {
+    gems.delete(id);
 }
 
 function onPlayerConnect(id, username) {

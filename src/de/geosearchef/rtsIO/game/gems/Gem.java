@@ -15,9 +15,9 @@ public class Gem {
     @Getter private boolean spawner;
     @Getter private Vector pos;
 
-    public Gem(boolean spawner, Vector pos) {
-        this.spawner = spawner;
+    public Gem(Vector pos, boolean spawner) {
         this.pos = pos;
+        this.spawner = spawner;
 
         this.id = IDFactory.generateGemID();
     }
@@ -34,7 +34,7 @@ public class Gem {
             Vector pos = new Vector((float) (Math.random() * Game.MAP_SIZE.getX()), (float) (Math.random() * Game.MAP_SIZE.getY()));
             double minDistance = Game.gems.stream().mapToDouble(gem -> gem.pos.sub(pos).length()).min().orElse(Double.MAX_VALUE);
             if(minDistance > MIN_DISTANCE) {
-                Game.gems.add(new Gem(true, pos));
+                Game.gems.add(new Gem(pos, true));
             }
         }
     }

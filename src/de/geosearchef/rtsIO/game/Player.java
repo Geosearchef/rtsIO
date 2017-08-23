@@ -1,6 +1,7 @@
 package de.geosearchef.rtsIO.game;
 
 import de.geosearchef.rtsIO.json.*;
+import de.geosearchef.rtsIO.json.gems.NewGemMessage;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
 import de.geosearchef.rtsIO.util.Vector;
 import lombok.EqualsAndHashCode;
@@ -128,6 +129,11 @@ public class Player {
         //Send all units to this player
         synchronized (Game.units) {
             Game.units.forEach(u -> this.send(new NewUnitMessage(u.getPlayer().getPlayerID(), u.getUnitID(), u.getUnitType(), u.getPos(), u.getVel(), u.getDest(), u.getHp())));
+        }
+
+        //Send all gems to this player
+        synchronized (Game.gems) {
+            Game.gems.forEach(g -> this.send(new NewGemMessage(g.getId(), g.getPos(), g.isSpawner())));
         }
     }
 
