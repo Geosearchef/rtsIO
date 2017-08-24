@@ -6,6 +6,8 @@ test.src = "img/test.svg";
 var unitIcons = [];
 loadUnitIcons();
 
+var selectionIcon = loadImage("img/selectionIcon.svg");
+
 
 
 
@@ -19,6 +21,10 @@ function renderUnits() {
     units.forEach(function (unit) {
         ctx.drawImage(unitIcons[unit.unitType].body, unit.pos.x * CELL_SCALE, unit.pos.y * CELL_SCALE, CELL_SCALE, CELL_SCALE);
         ctx.drawImage(unitIcons[unit.unitType].turret, unit.pos.x * CELL_SCALE, unit.pos.y * CELL_SCALE, CELL_SCALE, CELL_SCALE);
+
+        if(unit.selected) {
+            ctx.drawImage(selectionIcon, unit.pos.x * CELL_SCALE, unit.pos.y * CELL_SCALE, CELL_SCALE, CELL_SCALE);
+        }
     });
 }
 
