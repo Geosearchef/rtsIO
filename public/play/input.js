@@ -74,11 +74,21 @@ window.addEventListener('mousemove', function(event) {
 
 window.addEventListener('mouseup', function(event) {
 
+    var currentMousePosMapSpace = screenToMapSpace(new Vector(event.clientX, event.clientY));
+
     if(event.button === 0) {
+
         //Apply selection
-        units.forEach(function (unit) {
-            unit.selected = unit.playerID == ownPlayerID && unit.pos.containedInRect(new Rect(selectionStartPos, screenToMapSpace(new Vector(event.clientX, event.clientY))));
-        });
+        if(! selectionStartPos.equals(currentMousePosMapSpace)) {
+            units.forEach(function (unit) {
+                //TODO: swap containedInRect with intersects between selection rect and unit rect
+                unit.selected = unit.playerID == ownPlayerID && unit.pos.containedInRect(new Rect(selectionStartPos, currentMousePosMapSpace));
+            });
+        } else {
+            units.forEach(function (unit) {
+                unit.selected = unit.playerID == ownPlayerID && currentMousePosMapSpace.containedInRect(new Rect(unit.pos, unit.pos.add(new Vector(unit.getSize(), unit.getSize()))));
+            });
+        }
 
         selectionStartPos = null;
     }
@@ -86,7 +96,7 @@ window.addEventListener('mouseup', function(event) {
     if(event.button === 2) {
         //Movement order
         if(! isMapMoving) {
-            moveUnits(screenToMapSpace(currentMousePos).add(new Vector(-0.5, -0.5)));//TODO: unit size instead of 0.5
+            moveUnits(currentMousePosMapSpace.add(new Vector(-0.5, -0.5)));//TODO: unit size instead of 0.5
         }
         isMapMoving = false;
         mouseRightDown = false;

@@ -8,6 +8,8 @@ function Unit(playerID, unitID, unitType, pos, vel, dest, hp) {
     this.dest = dest;
     this.hp = hp;
 
+    this.getSize = function() {return 1.0;};
+
     if(ownPlayerID === playerID)
         this.selected = true;
 }
