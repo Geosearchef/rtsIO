@@ -1,7 +1,7 @@
 package de.geosearchef.rtsIO.game;
 
+import de.geosearchef.rtsIO.game.buildings.Building;
 import de.geosearchef.rtsIO.game.gems.Gem;
-import de.geosearchef.rtsIO.json.gems.NewGemMessage;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +28,12 @@ public class Updater {
             }
         }
         newGems.forEach(Game::addGem);
+
+        synchronized (Game.buildings) {
+            for(Building building : Game.buildings) {
+                building.update(d);
+            }
+        }
     }
 
     private static long lastFrame = 0;

@@ -1,6 +1,9 @@
 package de.geosearchef.rtsIO.game;
 
+import de.geosearchef.rtsIO.game.buildings.Building;
 import de.geosearchef.rtsIO.game.gems.Gem;
+import de.geosearchef.rtsIO.json.buildings.DeleteBuildingMessage;
+import de.geosearchef.rtsIO.json.buildings.NewBuildingMessage;
 import de.geosearchef.rtsIO.json.gems.DeleteGemMessage;
 import de.geosearchef.rtsIO.json.gems.NewGemMessage;
 import de.geosearchef.rtsIO.json.units.DeleteUnitMessage;
@@ -23,6 +26,7 @@ public class Game {
 
     public static Set<Unit> units = new HashSet<Unit>();
     public static Set<Gem> gems = new HashSet<Gem>();
+    public static Set<Building> buildings = new HashSet<Building>();
 
 
     public static void addUnit(Unit unit) {
@@ -39,8 +43,6 @@ public class Game {
         PlayerManager.broadcastPlayers(new DeleteUnitMessage(unit.getUnitID()));
     }
 
-    //TODO: inconsitency between add/remove units and gems
-
     public static void addGem(Gem gem) {
         synchronized (gems) {
             Game.gems.add(gem);
@@ -55,6 +57,20 @@ public class Game {
         PlayerManager.broadcastPlayers(new DeleteGemMessage(gem.getId()));
 
         unit.getPlayer().addResources(gem.getResourceAmount());
+    }
+
+    public static void addBuilding(Building building) {
+        synchronized (buildings) {
+            buildings.add(building);
+        }
+        PlayerManager.broadcastPlayers(new NewBuildingMessage(building.getPlayer().getPlayerID(), building.getBuildingID(), building.getBuildingType(), building.getPos(), building.getHp()));
+    }
+
+    public static void removeBuilding(Building building) {
+        synchronized (buildings) {
+            buildings.remove(building);
+        }
+        PlayerManager.broadcastPlayers(new DeleteBuildingMessage(building.getBuildingID()));
     }
 
 

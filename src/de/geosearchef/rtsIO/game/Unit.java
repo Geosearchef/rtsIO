@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Data
-public class Unit {
+public class Unit extends Targetable {
 
     private Player player;
     private int unitID;
@@ -18,16 +18,16 @@ public class Unit {
     private Vector pos;
     private Vector vel;
     private Vector dest;
-    private float hp;
 
     public Unit(Player player, int unitType, Vector pos, float hp) {
+        super(hp);
+
         this.player = player;
         this.unitID = IDFactory.generateUnitID();
         this.unitType = unitType;
         this.pos = new Vector(pos);
         this.vel = new Vector();
         this.dest = new Vector();
-        this.hp = hp;
     }
 
     public void update(float d) {
