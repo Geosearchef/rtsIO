@@ -44,6 +44,14 @@ function onSocketMessage(event) {
             onDeleteGem(msg.id);
             break;
 
+        case "newBuilding":
+            onNewBuilding(msg.playerID, msg.buildingID, msg.buildingType, cloneVector(msg.pos), msg.hp);
+            break;
+
+        case "deleteBuilding":
+            onDeleteBuilding(msg.buildingID);
+            break;
+
         case "resourceAmountUpdate":
             ownResourceAmount = msg.resourceAmount;
             break;

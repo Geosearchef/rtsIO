@@ -9,4 +9,9 @@ public class Targetable {
 
     private float hp;
 
+
+    //TODO DODODODO
+    public float getSize() {
+        return 1.0f;
+    }
 }

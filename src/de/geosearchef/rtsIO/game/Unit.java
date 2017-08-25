@@ -73,10 +73,6 @@ public class Unit extends Targetable {
     //TODO
     public float getMoveSpeed() {return 3f;}
 
-    public float getSize() {
-        return 1.0f;//TODO DODODODO
-    }
-
     public Vector getCenter() {
         return pos.add(new Vector(0.5f, 0.5f));
     }

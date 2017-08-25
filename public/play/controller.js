@@ -14,6 +14,7 @@ var ownResourceAmount = 0;
 var players = new Map();
 var units = new Map();
 var gems = new Map();
+var buildings = new Map();
 
 
 
@@ -64,6 +65,16 @@ function onNewGem(id, pos, spawner) {
 function onDeleteGem(id) {
     gems.delete(id);
 }
+
+function onNewBuilding(playerID, buildingID, buildingType, pos, hp) {
+    var building = new Building(playerID, buildingID, buildingType, pos, hp);
+    buildings.set(buildingID, building);
+}
+
+function onDeleteBuilding(buildingID) {
+    buildings.delete(buildingID);
+}
+
 
 function onPlayerConnect(id, username) {
     players.set(id, new Player(id, username));

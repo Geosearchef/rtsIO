@@ -1,4 +1,9 @@
 
+function Player(playerID, username) {
+    this.playerID = playerID;
+    this.username = username;
+}
+
 function Unit(playerID, unitID, unitType, pos, vel, dest, hp) {
     this.playerID = playerID;
     this.unitID = unitID;
@@ -14,13 +19,18 @@ function Unit(playerID, unitID, unitType, pos, vel, dest, hp) {
         this.selected = true;
 }
 
-function Player(playerID, username) {
-    this.playerID = playerID;
-    this.username = username;
-}
-
 function Gem(id, pos, spawner) {
     this.id = id;
     this.pos = pos;
     this.spawner = spawner;
+}
+
+function Building(playerID, buildingID, buildingType, pos, hp) {
+    this.playerID = playerID;
+    this.buildingID = buildingID;
+    this.buildingType = buildingType;
+    this.pos = pos;
+    this.hp = hp;
+
+    this.getSize = function() {return 1.0;};
 }
