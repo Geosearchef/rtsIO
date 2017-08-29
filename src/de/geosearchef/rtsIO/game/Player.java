@@ -1,5 +1,6 @@
 package de.geosearchef.rtsIO.game;
 
+import de.geosearchef.rtsIO.Main;
 import de.geosearchef.rtsIO.json.*;
 import de.geosearchef.rtsIO.json.gems.NewGemMessage;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
@@ -111,6 +112,9 @@ public class Player {
 
         this.sendGameInfo();
         Game.addUnit(new Unit(this, 0, new Vector(50, 50), 100));
+
+        if(! Main.PRODUCTION)
+            this.setResourceAmount(200);
 
         logger.info("User " + this.username + " connected");
     }

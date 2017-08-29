@@ -3,6 +3,7 @@ package de.geosearchef.rtsIO;
 import de.geosearchef.rtsIO.api.Api;
 import de.geosearchef.rtsIO.game.Game;
 import de.geosearchef.rtsIO.game.Updater;
+import de.geosearchef.rtsIO.js.Data;
 import de.geosearchef.rtsIO.js.JSCombiner;
 import de.geosearchef.rtsIO.websocket.WebSocket;
 import org.slf4j.Logger;
@@ -26,6 +27,8 @@ public class Main {
         Logger logger = LoggerFactory.getLogger("rtsIO");
         if(!PRODUCTION)
             logger.info("DEBUG MODE ACTIVATED");
+
+        Data.init();
 
         Game.init();
 

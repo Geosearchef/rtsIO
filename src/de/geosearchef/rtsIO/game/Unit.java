@@ -2,14 +2,14 @@ package de.geosearchef.rtsIO.game;
 
 import de.geosearchef.rtsIO.IDFactory;
 import de.geosearchef.rtsIO.game.gems.Gem;
+import de.geosearchef.rtsIO.js.Data;
 import de.geosearchef.rtsIO.json.units.UpdateUnitMessage;
 import de.geosearchef.rtsIO.util.Vector;
-import lombok.Data;
 
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
-@Data
+@lombok.Data
 public class Unit extends Targetable {
 
     private Player player;
@@ -20,7 +20,7 @@ public class Unit extends Targetable {
     private Vector dest;
 
     public Unit(Player player, int unitType, Vector pos, float hp) {
-        super(hp);
+        super(((Number)Data.getUnitData(unitType).get("hp")).floatValue());
 
         this.player = player;
         this.unitID = IDFactory.generateUnitID();
@@ -72,6 +72,8 @@ public class Unit extends Targetable {
 
     //TODO
     public float getMoveSpeed() {return 3f;}
+
+    public float getRadius() {return (float)Math.sqrt(2) / 2f * this.getSize();}
 
     public Vector getCenter() {
         return pos.add(new Vector(0.5f, 0.5f));

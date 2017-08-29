@@ -15,7 +15,8 @@ public class Building extends Targetable {
     private Vector pos;
 
     public Building(Player player, int buildingType, Vector pos, float hp) {
-        super(hp);
+        super(((Number) de.geosearchef.rtsIO.js.Data.getBuildingData(buildingType).get("hp")).floatValue());
+
         this.player = player;
         this.buildingType = buildingType;
         this.pos = pos;
@@ -26,5 +27,10 @@ public class Building extends Targetable {
 
     public void update(float d) {
 
+    }
+
+    //TODO
+    public float getCost() {
+        return 10f;
     }
 }
