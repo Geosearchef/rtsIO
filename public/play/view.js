@@ -58,6 +58,8 @@ function handleResize() {
 
     Mouse.x = newWidth / 2;
     Mouse.y = newHeight / 2;
+
+    generateGui();
 }
 
 

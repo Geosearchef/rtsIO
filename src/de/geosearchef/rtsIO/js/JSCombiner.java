@@ -8,19 +8,38 @@ import java.util.Scanner;
 
 public class JSCombiner {
 
-    public static final String[] files = {"controller.js", "view.js", "websocket.js", "input.js", "util/vector.js", "game/data.js", "game/unitData.js", "rendering/renderGui.js", "rendering/renderUnits.js", "rendering/renderMap.js", "rendering/renderGems.js"};
+    public static final String[] files = {"controller.js",
+            "view.js",
+            "websocket.js",
+            "input.js",
+            "util/vector.js",
+            "game/data.js",
+            "game/unitData.js",
+            "game/buildingData.js",
+            "rendering/renderGui.js",
+            "rendering/renderUnits.js",
+            "rendering/renderBuildings.js",
+            "rendering/renderMap.js",
+            "rendering/renderGems.js",
+            "gui/button.js",
+    };
 
     private static String combineJS() throws FileNotFoundException {
         StringBuilder s = new StringBuilder();
+        StringBuilder consts = new StringBuilder();
         for(String fileName : files) {
             Scanner scan = new Scanner(new File("public/play/" + fileName));
             while(scan.hasNext()) {
                 String nextLine = scan.nextLine();
-                s.append(nextLine.split("////")[0] + "\n");
+                if(nextLine.startsWith("const"))
+                    consts.append(nextLine.split("////")[0] + "\n");
+                else
+                    s.append(nextLine.split("////")[0] + "\n");
             }
             scan.close();
         }
-        return s.toString();
+
+        return consts.toString() + "\n" + s.toString();
     }
 
     public static String cached = null;
