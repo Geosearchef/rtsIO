@@ -66,6 +66,8 @@ public enum WebSocket {
                 try {
                     PlayerManager.attemptLogin((String) message.get("username"), (String) message.get("token"), session);
                 } catch (Exception e) {
+                    logger.error("JSON: " + msg);
+                    logger.error("Error while logging in user, redirecting to main page", e);
                     redirectToLoginPage(session);
                 }
             } else {
@@ -92,7 +94,7 @@ public enum WebSocket {
     public void redirectToLoginPage(Session session) {
         logger.info("Redirecting user to login");
         try {
-            send(session, "{type:\"loginFailed\"}");
+            send(session, "{\"type\":\"loginFailed\"}");
             session.close();
         } catch (IOException e) {
             logger.warn("Error while sending user back to login.", e);

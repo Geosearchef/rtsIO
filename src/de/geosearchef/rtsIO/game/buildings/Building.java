@@ -15,7 +15,7 @@ public class Building extends Targetable {
     private Vector pos;
 
     public Building(Player player, int buildingType, Vector pos, float hp) {
-        super(((Number) de.geosearchef.rtsIO.js.Data.getBuildingData(buildingType).get("hp")).floatValue());
+        super(((Number) de.geosearchef.rtsIO.js.Data.getBuildingData(buildingType).get("maxHp")).floatValue());
 
         this.player = player;
         this.buildingType = buildingType;

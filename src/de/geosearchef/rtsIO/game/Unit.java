@@ -20,7 +20,7 @@ public class Unit extends Targetable {
     private Vector dest;
 
     public Unit(Player player, int unitType, Vector pos, float hp) {
-        super(((Number)Data.getUnitData(unitType).get("hp")).floatValue());
+        super(((Number)Data.getUnitData(unitType).get("maxHp")).floatValue());
 
         this.player = player;
         this.unitID = IDFactory.generateUnitID();
