@@ -16,8 +16,16 @@
 <body>
     <span style="color:#e43200">
         <script language="JavaScript">
-            if(Util.getParameterByName("connectionLost") == 'true')
+            if(Util.getParameterByName("connectionLost") == 'true'){
                 document.write("Sorry, but it seems like we've lost connection to the game server!<br>");
+            }
+        </script>
+
+        <script language="JavaScript">
+            var isIE = /*@cc_on!@*/false || !!document.documentMode;
+            if(isIE) {
+                document.write("Your browser is not supported!");
+            }
         </script>
     </span>
 

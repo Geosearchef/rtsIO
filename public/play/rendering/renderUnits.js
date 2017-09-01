@@ -1,7 +1,7 @@
 
 
-var test = new Image();
-test.src = "img/test.svg";
+var testImage = new Image();
+testImage.src = "img/test.svg";
 
 var unitIcons = [];
 loadUnitIcons();
