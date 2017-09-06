@@ -30,6 +30,7 @@ function render(d) {
 
     renderUnderlay();
 
+    renderBuildings();
     renderGems();
     renderUnits();
 

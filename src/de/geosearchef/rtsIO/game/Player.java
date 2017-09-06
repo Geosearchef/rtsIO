@@ -53,8 +53,9 @@ public class Player {
 
     //TODO this is called async and doesn't throw any exceptions, FIX!!!
     public void onMessage(JSONObject message) {
+        System.out.println(message.toJSONString());
         switch((String)message.get("type")) {
-            case "moveUnits": {System.out.println(message.toJSONString());
+            case "moveUnits": {
                 JSONArray unitIDArray = (JSONArray) message.get("unitIDs");
                 HashSet<Integer> unitIDs = unitIDArray.stream()
                         .mapToInt(o -> Integer.parseInt(o.toString()))
@@ -72,6 +73,12 @@ public class Player {
                 break;
             }
 
+
+            case "createBuilding": {
+                //TODO
+
+                break;
+            }
         }
     }
 

@@ -1,4 +1,7 @@
 
+var buildingModeTypeId = -1;
+
+
 var Key = {
     pressed: new Array(256).fill(false),
     LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40,
@@ -48,14 +51,40 @@ var isMapMoving = false;
 
 window.addEventListener('mousedown', function(event) {
 
+    currentMousePos = new Vector(event.clientX, event.clientY);
+
+    for(var i = 0;i < buttons.length;i++) {
+        var button = buttons[i];
+        if(button.isInside(currentMousePos)) {
+
+            var buildingButtonId = buildingButtons.indexOf(button);
+            if(buildingButtonId != -1 && event.button === 0) {
+                buildingModeTypeId = buildingButtonId;
+            }
+
+            return;//CANCEL processing
+        }
+    }
+
+
+
     //Start selection
     if(event.button === 0) {
-        selectionStartPos = screenToMapSpace(new Vector(event.clientX, event.clientY));
+
+        if(buildingModeTypeId != -1) {
+            createBuilding(screenToMapSpace(currentMousePos), buildingModeTypeId);
+            buildingModeTypeId = -1;
+        } else {
+            selectionStartPos = screenToMapSpace(new Vector(event.clientX, event.clientY));
+        }
     }
 
     //Grab map / Move unit
     if(event.button === 2) {
         mouseRightDown = true;
+
+        //Stop building process
+        buildingModeTypeId = -1;
     }
 });
 
@@ -74,7 +103,19 @@ window.addEventListener('mousemove', function(event) {
 
 window.addEventListener('mouseup', function(event) {
 
-    var currentMousePosMapSpace = screenToMapSpace(new Vector(event.clientX, event.clientY));
+    currentMousePos = new Vector(event.clientX, event.clientY);
+
+    for(var i = 0;i < buttons.length;i++) {
+        var button = buttons[i];
+        if(button.isInside(currentMousePos)) {
+
+
+            return;//CANCEL processing
+        }
+    }
+
+
+    var currentMousePosMapSpace = screenToMapSpace(currentMousePos);
 
     if(event.button === 0) {
 
