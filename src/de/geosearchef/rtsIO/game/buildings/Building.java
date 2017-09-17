@@ -3,10 +3,10 @@ package de.geosearchef.rtsIO.game.buildings;
 import de.geosearchef.rtsIO.IDFactory;
 import de.geosearchef.rtsIO.game.Player;
 import de.geosearchef.rtsIO.game.Targetable;
+import de.geosearchef.rtsIO.js.Data;
 import de.geosearchef.rtsIO.util.Vector;
-import lombok.Data;
 
-@Data
+@lombok.Data
 public class Building extends Targetable {
 
     private Player player;
@@ -14,8 +14,8 @@ public class Building extends Targetable {
     private int buildingType;
     private Vector pos;
 
-    public Building(Player player, int buildingType, Vector pos, float hp) {
-        super(((Number) de.geosearchef.rtsIO.js.Data.getBuildingData(buildingType).get("maxHp")).floatValue());
+    public Building(Player player, int buildingType, Vector pos) {
+        super(Data.getBuildingData(buildingType).getMaxHp());
 
         this.player = player;
         this.buildingType = buildingType;

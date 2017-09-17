@@ -1,5 +1,7 @@
 package de.geosearchef.rtsIO.js;
 
+import com.google.gson.Gson;
+import de.geosearchef.rtsIO.game.Unit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -9,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Data {
@@ -18,13 +22,18 @@ public class Data {
 
     public static final Logger logger = LoggerFactory.getLogger(Data.class);
 
-    public static JSONArray unitData;
-    public static JSONArray buildingData;
+    public static List<UnitData> unitData = new ArrayList<UnitData>();
+    public static List<BuildingData> buildingData = new ArrayList<BuildingData>();
 
     public static void init() {
         try {
-            unitData = readFile(new File(unitDataFile));
-            buildingData = readFile(new File(buildingDataFile));
+            //TODO: JsonBuilder.create() can read json arrays directily to array
+            JSONArray unitDataSimple = readFile(new File(unitDataFile));
+            JSONArray buildingDataSimple = readFile(new File(buildingDataFile));
+
+            unitDataSimple.stream().forEachOrdered(o -> unitData.add((UnitData) new Gson().fromJson(((JSONObject)o).toJSONString(), UnitData.class)));
+            buildingDataSimple.stream().forEachOrdered(o -> buildingData.add((BuildingData) new Gson().fromJson(((JSONObject)o).toJSONString(), BuildingData.class)));
+
         } catch(Exception e) {
             logger.error("Could not read unit/building data from JS.", e);
             System.exit(10);
@@ -44,10 +53,18 @@ public class Data {
         return (JSONArray) ((JSONObject)new JSONParser().parse(json.toString().replace(";", ""))).get("data");
     }
 
-    public static JSONObject getUnitData(int unitType) {
-        return (JSONObject) unitData.get(unitType);
+    public static UnitData getUnitData(int unitType) {
+        return unitData.get(unitType);
     }
-    public static JSONObject getBuildingData(int buildingType) {
-        return (JSONObject) buildingData.get(buildingType);
+    public static BuildingData getBuildingData(int buildingType) {
+        return buildingData.get(buildingType);
+    }
+
+    public static boolean hasUnitData(int unitType) {
+        return unitType < unitData.size();
+    }
+
+    public static boolean hasBuildingData(int buildingType) {
+        return buildingType < buildingData.size();
     }
 }

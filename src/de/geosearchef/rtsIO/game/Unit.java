@@ -22,7 +22,7 @@ public class Unit extends Targetable {
     private BuildingTask buildingsTask = null;
 
     public Unit(Player player, int unitType, Vector pos, float hp) {
-        super(((Number)Data.getUnitData(unitType).get("maxHp")).floatValue());
+        super(Data.getUnitData(unitType).getMaxHp());
 
         this.player = player;
         this.unitID = IDFactory.generateUnitID();
@@ -42,7 +42,7 @@ public class Unit extends Targetable {
 
             if(buildingsTask != null) {
                 //Create new building
-                Game.addBuilding(new Building(this.getPlayer(), this.buildingsTask.buildingType, new Vector(this.dest), Data.get));
+                Game.addBuilding(new Building(this.getPlayer(), this.buildingsTask.buildingType, new Vector(this.dest)));
             }
         } else {
             this.pos = this.pos.add(travel);
