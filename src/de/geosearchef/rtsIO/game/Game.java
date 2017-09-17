@@ -63,7 +63,7 @@ public class Game {
         synchronized (buildings) {
             buildings.add(building);
         }
-        PlayerManager.broadcastPlayers(new NewBuildingMessage(building.getPlayer().getPlayerID(), building.getBuildingID(), building.getBuildingType(), building.getPos(), building.getHp()));
+        PlayerManager.broadcastPlayers(new NewBuildingMessage(building.getPlayer().getPlayerID(), building.getBuildingID(), building.getBuildingType(), building.getPos(), building.getHp(), building.isInBuildingProcess()));
     }
 
     public static void removeBuilding(Building building) {

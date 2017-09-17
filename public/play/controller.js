@@ -1,6 +1,7 @@
 window.onload = init;//set init() to be executed on page loading
 
 const CELL_SCALE = 50.0;
+const BUILDING_PROCESS_HP_PER_SECOND = 10.0; //also in java
 
 var MAP_SIZE = new Vector(1, 1);//SET ON GAME INFO
 
@@ -27,6 +28,15 @@ function update(d) {
             unit.pos = cloneVector(unit.dest);
         } else {
             unit.pos.setAdd(travel);
+        }
+    });
+
+    buildings.forEach(function(building) {
+        if(building.inBuildingProcess) {
+            building.hp += d * BUILDING_PROCESS_HP_PER_SECOND;
+            if(building.hp > building.maxHp) {
+                building.hp = building.maxHp;
+            }
         }
     });
 }
@@ -66,9 +76,15 @@ function onDeleteGem(id) {
     gems.delete(id);
 }
 
-function onNewBuilding(playerID, buildingID, buildingType, pos, hp) {
-    var building = new Building(playerID, buildingID, buildingType, pos, hp);
+function onNewBuilding(playerID, buildingID, buildingType, pos, hp, inBuildingProcess) {//TODO: refactor, only pass msg
+    var building = new Building(playerID, buildingID, buildingType, pos, hp, inBuildingProcess);
     buildings.set(buildingID, building);
+}
+
+function onUpdateBuilding(msg) {
+    var building = buildings.get(msg.buildingID);
+    building.hp = msg.hp;
+    building.inBuildingProcess = msg.inBuildingProcess;
 }
 
 function onDeleteBuilding(buildingID) {

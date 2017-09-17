@@ -5,13 +5,10 @@ import de.geosearchef.rtsIO.util.Vector;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class NewBuildingMessage extends Message {
+public class UpdateBuildingMessage extends Message {
 
-    private final String type = "newBuilding";
-    private final int playerID;
+    private final String type = "updateBuilding";
     private final int buildingID;
-    private final int buildingType;
-    private final Vector pos;
     private final float hp;
     private final boolean inBuildingProcess;
 }

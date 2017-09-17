@@ -35,18 +35,23 @@ public class Unit extends Targetable {
     public void update(float d) {
 
         Vector travel = this.vel.scale(d);
+        float travelDistanceSquared = travel.lengthSquared();
 
-        if(travel.lengthSquared() >= dest.sub(pos).lengthSquared()) {
-            this.vel = new Vector();
-            this.pos = new Vector(this.dest);
+        if(travelDistanceSquared > 0f) {
+            if(travelDistanceSquared >= dest.sub(pos).lengthSquared()) {
+                this.vel = new Vector();
+                this.pos = new Vector(this.dest);
 
-            if(buildingTask != null) {
-                //Create new building
-                Game.addBuilding(new Building(this.getPlayer(), this.buildingTask.buildingType, new Vector(this.dest)));
-                buildingTask = null;
+                if(buildingTask != null) {
+                    //Create new building
+                    Game.addBuilding(new Building(this.getPlayer(), this.buildingTask.buildingType, new Vector(this.dest)));
+                    buildingTask = null;
+                }
+
+                this.broadcastUpdate();
+            } else {
+                this.pos = this.pos.add(travel);
             }
-        } else {
-            this.pos = this.pos.add(travel);
         }
 
         //Check for collision with gem
@@ -70,7 +75,7 @@ public class Unit extends Targetable {
             return;
 
         this.vel = dest.sub(pos).normalise().scale(this.getMoveSpeed());
-        PlayerManager.broadcastPlayers(new UpdateUnitMessage(this.getUnitID(), this.getPos(), this.getVel(), this.getDest(), this.getHp()));
+        this.broadcastUpdate();
     }
 
     public void build(Vector dest, int buildingType) {
@@ -78,14 +83,16 @@ public class Unit extends Targetable {
         this.buildingTask = new BuildingTask(buildingType);
     }
 
+    public void broadcastUpdate() {
+        PlayerManager.broadcastPlayers(new UpdateUnitMessage(this.getUnitID(), this.getPos(), this.getVel(), this.getDest(), this.getHp()));
+    }
 
     @Override
     public int hashCode() {
         return unitID;
     }
 
-    //TODO
-    public float getMoveSpeed() {return 3f;}
+    public float getMoveSpeed() {return Data.getUnitData(unitType).getMovementSpeed();}
 
     public float getRadius() {return (float)Math.sqrt(2) / 2f * this.getSize();}
 

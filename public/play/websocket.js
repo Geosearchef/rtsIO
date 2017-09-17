@@ -3,7 +3,7 @@ var socket;
 
 function onSocketMessage(event) {
     var msg = JSON.parse(event.data);
-
+    console.log(msg);
     switch (msg.type) {
         case "loginSuccess":
             ownUsername = msg.username;
@@ -45,7 +45,11 @@ function onSocketMessage(event) {
             break;
 
         case "newBuilding":
-            onNewBuilding(msg.playerID, msg.buildingID, msg.buildingType, cloneVector(msg.pos), msg.hp);
+            onNewBuilding(msg.playerID, msg.buildingID, msg.buildingType, cloneVector(msg.pos), msg.hp, msg.inBuildingProcess);
+            break;
+
+        case "updateBuilding":
+            onUpdateBuilding(msg);
             break;
 
         case "deleteBuilding":

@@ -25,12 +25,13 @@ function Gem(id, pos, spawner) {
     this.spawner = spawner;
 }
 
-function Building(playerID, buildingID, buildingType, pos, hp) {
+function Building(playerID, buildingID, buildingType, pos, hp, inBuildingProcess) {
     this.playerID = playerID;
     this.buildingID = buildingID;
     this.buildingType = buildingType;
     this.pos = pos;
     this.hp = hp;
+    this.inBuildingProcess = inBuildingProcess;
 
     this.getSize = function() {return 1.0;};
 }
