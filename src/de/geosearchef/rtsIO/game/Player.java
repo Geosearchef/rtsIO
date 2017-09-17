@@ -6,9 +6,7 @@ import de.geosearchef.rtsIO.json.gems.NewGemMessage;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
 import de.geosearchef.rtsIO.util.Pair;
 import de.geosearchef.rtsIO.util.Vector;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,7 +19,6 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Player {
@@ -93,11 +90,11 @@ public class Player {
                         .map(Game::getUnitByID)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
-                        .filter(u -> u.getPlayer() == this && u.getBuildingsTask() == null)
+                        .filter(u -> u.getPlayer() == this && u.getBuildingTask() == null)
                         .collect(Collectors.toList());
 
                 if(selectedUnits.isEmpty()) {
-                    selectedUnits.addAll(Game.getUnitsByPlayer(this).stream().filter(u -> u.getBuildingsTask() == null).collect(Collectors.toList()));
+                    selectedUnits.addAll(Game.getUnitsByPlayer(this).stream().filter(u -> u.getBuildingTask() == null).collect(Collectors.toList()));
                 }
 
                 Optional<Unit> closestUnit = selectedUnits.stream()

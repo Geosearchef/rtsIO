@@ -4,6 +4,9 @@ loadBuildingIcons();
 
 function renderBuildings() {
 
+    buildings.forEach(function (building) {
+        ctx.drawImage(buildingIcons[building.buildingType], building.pos.x * CELL_SCALE, building.pos.y * CELL_SCALE, CELL_SCALE, CELL_SCALE);
+    });
 
     renderBuildingMode();
 }
