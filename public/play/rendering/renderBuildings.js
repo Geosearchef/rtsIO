@@ -9,9 +9,9 @@ function renderBuildings() {
 }
 
 function renderBuildingMode() {
-    if(buildingModeTypeId != -1) {
+    if(buildingModeTypeID != -1) {
         var buildingModePos = screenToMapSpace(currentMousePos);
-        ctx.drawImage(buildingIcons[buildingModeTypeId], (buildingModePos.x - 0.5) * CELL_SCALE, (buildingModePos.y - 0.5) * CELL_SCALE, CELL_SCALE, CELL_SCALE);//TODO: dynamic width of buildings in js
+        ctx.drawImage(buildingIcons[buildingModeTypeID], (buildingModePos.x - 0.5) * CELL_SCALE, (buildingModePos.y - 0.5) * CELL_SCALE, CELL_SCALE, CELL_SCALE);//TODO: dynamic width of buildings in js
     }
 }
 

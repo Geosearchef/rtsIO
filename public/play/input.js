@@ -1,5 +1,5 @@
 
-var buildingModeTypeId = -1;
+var buildingModeTypeID = -1;
 
 
 var Key = {
@@ -59,7 +59,7 @@ window.addEventListener('mousedown', function(event) {
 
             var buildingButtonId = buildingButtons.indexOf(button);
             if(buildingButtonId != -1 && event.button === 0) {
-                buildingModeTypeId = buildingButtonId;
+                buildingModeTypeID = buildingButtonId;
             }
 
             return;//CANCEL processing
@@ -71,9 +71,9 @@ window.addEventListener('mousedown', function(event) {
     //Start selection
     if(event.button === 0) {
 
-        if(buildingModeTypeId != -1) {
-            createBuilding(screenToMapSpace(currentMousePos), buildingModeTypeId);
-            buildingModeTypeId = -1;
+        if(buildingModeTypeID != -1) {
+            createBuilding(screenToMapSpace(currentMousePos), buildingModeTypeID);
+            buildingModeTypeID = -1;
         } else {
             selectionStartPos = screenToMapSpace(new Vector(event.clientX, event.clientY));
         }
@@ -84,7 +84,7 @@ window.addEventListener('mousedown', function(event) {
         mouseRightDown = true;
 
         //Stop building process
-        buildingModeTypeId = -1;
+        buildingModeTypeID = -1;
     }
 });
 
@@ -117,7 +117,7 @@ window.addEventListener('mouseup', function(event) {
 
     var currentMousePosMapSpace = screenToMapSpace(currentMousePos);
 
-    if(event.button === 0) {
+    if(event.button === 0 && selectionStartPos != null) {
 
         //Apply selection
         if(! selectionStartPos.equals(currentMousePosMapSpace)) {

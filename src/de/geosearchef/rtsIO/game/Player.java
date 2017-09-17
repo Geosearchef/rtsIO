@@ -4,6 +4,7 @@ import de.geosearchef.rtsIO.Main;
 import de.geosearchef.rtsIO.json.*;
 import de.geosearchef.rtsIO.json.gems.NewGemMessage;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
+import de.geosearchef.rtsIO.util.Pair;
 import de.geosearchef.rtsIO.util.Vector;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,9 +17,7 @@ import org.slf4j.LoggerFactory;
 import de.geosearchef.rtsIO.websocket.WebSocket;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +50,6 @@ public class Player {
     }
 
 
-    //TODO this is called async and doesn't throw any exceptions, FIX!!!
     public void onMessage(JSONObject message) {
         System.out.println(message.toJSONString());
         switch((String)message.get("type")) {
@@ -75,7 +73,44 @@ public class Player {
 
 
             case "createBuilding": {
-                //TODO
+
+                Vector pos = new Vector((JSONObject) message.get("pos"));
+                int buildingType = ((Long)message.get("typeID")).intValue();
+
+                //TODO: check building typeID
+                //TODO: check resources
+
+                //TODO: synchronize?? so no update can change during checks
+
+                JSONArray unitIDArray = (JSONArray) message.get("unitIDs");
+                HashSet<Integer> unitIDs = unitIDArray.stream()
+                        .mapToInt(o -> Integer.parseInt(o.toString()))
+                        .boxed()
+                        .collect(Collectors.toCollection(HashSet::new));
+
+                //Find closest selected unit
+                List<Unit> selectedUnits = unitIDs.stream()
+                        .map(Game::getUnitByID)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .filter(u -> u.getPlayer() == this && u.getBuildingsTask() == null)
+                        .collect(Collectors.toList());
+
+                if(selectedUnits.isEmpty()) {
+                    selectedUnits.addAll(Game.getUnitsByPlayer(this).stream().filter(u -> u.getBuildingsTask() == null).collect(Collectors.toList()));
+                }
+
+                Optional<Unit> closestUnit = selectedUnits.stream()
+                        .map(u -> new Pair<Unit, Float>(u, new Float(u.getPos().sub(pos.add(new Vector(0.5f, 0.5f /* TODO*/))).lengthSquared())))
+                        .min((l, r) -> l.getSecond() < r.getSecond() ? -1 : 1)
+                        .map(p -> p.getFirst());
+
+                if(! closestUnit.isPresent()) {
+                    logger.error("No existing units for player " + username + " to execute building command.");
+                    break;
+                }
+
+                closestUnit.get().build(pos, buildingType);
 
                 break;
             }
@@ -119,6 +154,7 @@ public class Player {
 
         this.sendGameInfo();
         Game.addUnit(new Unit(this, 0, new Vector(50, 50), 100));
+        Game.addUnit(new Unit(this, 0, new Vector(52, 52), 100));
 
         if(! Main.PRODUCTION)
             this.setResourceAmount(200);

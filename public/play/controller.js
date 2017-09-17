@@ -87,17 +87,25 @@ function onPlayerDisconnect(id) {
 
 //TODO: Move this to websocket???
 function moveUnits(dest) {
+    var unitIDs = getSelectedUnitIDs();
+    send({type: "moveUnits", unitIDs: unitIDs, dest: dest})
+}
+
+function createBuilding(pos, typeID) {
+    var unitIDs = getSelectedUnitIDs();
+    send({type: "createBuilding", typeID: typeID, pos: pos, unitIDs: unitIDs});
+}
+
+
+
+function getSelectedUnitIDs() {
     var unitIDs = [];
     units.forEach(function(unit) {
         if(unit.selected) {
             unitIDs.push(unit.unitID);
         }
     });
-    send({type: "moveUnits", unitIDs: unitIDs, dest: dest})
-}
-
-function createBuilding(pos, typeId) {
-    send({type: "createBuilding", typeId: typeId});
+    return unitIDs;
 }
 
 
