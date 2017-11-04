@@ -104,7 +104,9 @@ function onPlayerDisconnect(id) {
 //TODO: Move this to websocket???
 function moveUnits(dest) {
     var unitIDs = getSelectedUnitIDs();
-    send({type: "moveUnits", unitIDs: unitIDs, dest: dest})
+    if(unitIDs.length > 0) {
+        send({type: "moveUnits", unitIDs: unitIDs, dest: dest});
+    }
 }
 
 function createBuilding(pos, typeID) {

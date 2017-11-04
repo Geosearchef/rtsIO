@@ -23,7 +23,7 @@ public class Unit extends Targetable {
     private int unitType;
     private Vector pos;
     private Vector vel;
-    private Vector dest;
+    private Vector dest;//Not nullable, only matters when vel != 0
     private BuildingTask buildingTask = null;
 
     //Server sided
@@ -43,7 +43,7 @@ public class Unit extends Targetable {
 
     public void update(float d) {
 
-        if(dest != null) {
+        if(vel.lengthSquared() > 0) {
             this.vel = dest.sub(pos).normalise().scale(this.getMoveSpeed());
             if(this.vel.lengthSquared() == 0f) {
                 dest = null;

@@ -11,10 +11,11 @@ public abstract class Message {
 
     @Override
     public String toString() {
-        return gson.toJson(this);
+        System.out.println(gson.toJson(this));return gson.toJson(this);
     }
 
     public String toJson() {
+        System.out.println(gson.toJson(this));
         return gson.toJson(this);
     }
 }
