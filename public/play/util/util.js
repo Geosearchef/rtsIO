@@ -1,5 +1,6 @@
 var Util = {};
 
+const SQRT2 = Math.sqrt(2);
 
 
 //TODO: rewrite

@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 @lombok.Data
 public class Unit extends Targetable {
 
-    private static final int MAXIMUM_UPDATE_DELAY = 10;
+    private static final int MAXIMUM_UPDATE_DELAY = 400;
+    private static final float UNIT_COLLISION_IGNORE_DIST = 0.0000f;//see JS aswell TODO:
 
     private Player player;
     private int unitID;
@@ -46,7 +47,6 @@ public class Unit extends Targetable {
         if(vel.lengthSquared() > 0) {
             this.vel = dest.sub(pos).normalise().scale(this.getMoveSpeed());
             if(this.vel.lengthSquared() == 0f) {
-                dest = null;
                 this.broadcastUpdate();
             }
         }
@@ -58,7 +58,6 @@ public class Unit extends Targetable {
             if(travelDistanceSquared >= dest.sub(pos).lengthSquared()) {
                 this.vel = new Vector();
                 this.pos = new Vector(this.dest);
-                this.dest = null;
 
                 if(buildingTask != null) {
                     //Create new building
@@ -88,7 +87,7 @@ public class Unit extends Targetable {
                 .map(u -> new Pair<Unit, Float>(u, u.getCenter().sub(Unit.this.getCenter()).length()))
                 .forEach(p -> {
                     float neededDist = p.getFirst().getRadius() + Unit.this.getRadius();
-                    if(p.getSecond() < neededDist) {
+                    if(p.getSecond() < neededDist - UNIT_COLLISION_IGNORE_DIST) {
                         Vector force = this.getCenter().sub(p.getFirst().getCenter()).normaliseOrElse(new Vector((float)Math.random(), (float)Math.random()).normalise()).scale(2f * (1.0f - p.getSecond() / neededDist) * d);
                         this.pos = this.pos.add(force);
                         p.getFirst().pos = p.getFirst().pos.add(force.scale(-1f));
@@ -140,7 +139,8 @@ public class Unit extends Targetable {
 
     public float getMoveSpeed() {return Data.getUnitData(unitType).getMovementSpeed();}
 
-    public float getRadius() {return (float)Math.sqrt(2) / 2f * this.getSize();}
+    private static final float SQRT2 = (float)Math.sqrt(2);
+    public float getRadius() {return SQRT2 / 2f * this.getSize();}
 
     public Vector getCenter() {
         return pos.add(new Vector(this.getSize() / 2.0f, this.getSize() / 2.0f));

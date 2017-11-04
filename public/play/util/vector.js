@@ -14,6 +14,7 @@ function Vector(x, y) {
     this.lengthSquared = function() {return this.x * this.x + this.y * this.y;};
     this.length = function() {return Math.sqrt(this.lengthSquared())};
     this.normalise = function() {return this.scale(1 / this.length())};
+    this.normaliseOrElse = function(v) {return this.x != 0 && this.y != 0 ? this.scale(1 / this.length()) : v;};
     this.setNormalise = function() {return this.set(this.normalise());};
     this.set = function(v) {this.x = v.x; this.y = v.y;return this;};
     this.equals = function (o) {return 'x' in o && 'y' in o && this.x === o.x && this.y === o.y;};

@@ -22,6 +22,7 @@ var buildings = new Map();
 
 function update(d) {
     units.forEach(function(unit) {
+        //Unit movement
         var travel = unit.vel.scale(d);
         if(travel.lengthSquared() >= unit.pos.sub(unit.dest).lengthSquared()) {
             unit.vel = new Vector(0, 0);
@@ -29,6 +30,21 @@ function update(d) {
         } else {
             unit.pos.setAdd(travel);
         }
+
+        //Unit collision
+        units.forEach(function(u2) {
+            if(u2 === unit) {
+                return;
+            }
+
+            var neededDist = unit.getRadius() + u2.getRadius();
+            var actualDist = unit.pos.sub(u2.pos).length();
+            if(actualDist < neededDist) {
+                var force = unit.getCenter().sub(u2.getCenter()).normaliseOrElse(new Vector(0, 0)).scale(2 * (1.0 - actualDist / neededDist) * d);
+                unit.pos.setAdd(force);
+                u2.pos.setAdd(force.scale(-1));
+            }
+        });
     });
 
     buildings.forEach(function(building) {

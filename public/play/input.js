@@ -72,7 +72,7 @@ window.addEventListener('mousedown', function(event) {
     if(event.button === 0) {
 
         if(buildingModeTypeID != -1) {
-            createBuilding(screenToMapSpace(currentMousePos), buildingModeTypeID);
+            createBuilding(screenToMapSpace(currentMousePos).add(new Vector(-0.5, -0.5)), buildingModeTypeID);
             buildingModeTypeID = -1;
         } else {
             selectionStartPos = screenToMapSpace(new Vector(event.clientX, event.clientY));
