@@ -57,6 +57,11 @@ public class Vector {
         return this.scale(1f / this.length());
     }
 
+    public Vector normaliseOrElse(Vector v) {
+        float length = this.length();
+        return length > 0 ? this.scale(1f / length) : v;
+    }
+
     public float dot(Vector v) {
         return v.x * this.x + v.y * this.y;
     }

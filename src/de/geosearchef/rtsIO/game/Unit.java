@@ -5,13 +5,18 @@ import de.geosearchef.rtsIO.game.buildings.Building;
 import de.geosearchef.rtsIO.game.gems.Gem;
 import de.geosearchef.rtsIO.js.Data;
 import de.geosearchef.rtsIO.json.units.UpdateUnitMessage;
+import de.geosearchef.rtsIO.util.Pair;
 import de.geosearchef.rtsIO.util.Vector;
 
+import javax.xml.bind.UnmarshallerHandler;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @lombok.Data
 public class Unit extends Targetable {
+
+    private static final int MAXIMUM_UPDATE_DELAY = 10;
 
     private Player player;
     private int unitID;
@@ -20,6 +25,10 @@ public class Unit extends Targetable {
     private Vector vel;
     private Vector dest;
     private BuildingTask buildingTask = null;
+
+    //Server sided
+    private Optional<Long> needsUpdateSince = Optional.empty(); //e.g. after a collision
+
 
     public Unit(Player player, int unitType, Vector pos, float hp) {
         super(Data.getUnitData(unitType).getMaxHp());
@@ -34,6 +43,14 @@ public class Unit extends Targetable {
 
     public void update(float d) {
 
+        if(dest != null) {
+            this.vel = dest.sub(pos).normalise().scale(this.getMoveSpeed());
+            if(this.vel.lengthSquared() == 0f) {
+                dest = null;
+                this.broadcastUpdate();
+            }
+        }
+
         Vector travel = this.vel.scale(d);
         float travelDistanceSquared = travel.lengthSquared();
 
@@ -41,6 +58,7 @@ public class Unit extends Targetable {
             if(travelDistanceSquared >= dest.sub(pos).lengthSquared()) {
                 this.vel = new Vector();
                 this.pos = new Vector(this.dest);
+                this.dest = null;
 
                 if(buildingTask != null) {
                     //Create new building
@@ -64,6 +82,27 @@ public class Unit extends Targetable {
                         Game.consumeGem(gem, this);
                     });
         }
+
+        //Check for collision with unit, is already synchronized to Game.units
+        Game.units.stream().filter(u -> u != Unit.this)
+                .map(u -> new Pair<Unit, Float>(u, u.getCenter().sub(Unit.this.getCenter()).length()))
+                .forEach(p -> {
+                    float neededDist = p.getFirst().getRadius() + Unit.this.getRadius();
+                    if(p.getSecond() < neededDist) {
+                        Vector force = this.getCenter().sub(p.getFirst().getCenter()).normaliseOrElse(new Vector((float)Math.random(), (float)Math.random()).normalise()).scale(2f * (1.0f - p.getSecond() / neededDist) * d);
+                        this.pos = this.pos.add(force);
+                        p.getFirst().pos = p.getFirst().pos.add(force.scale(-1f));
+
+                        this.requireUpdate();
+                        p.getFirst().requireUpdate();
+                    }
+                });
+
+        needsUpdateSince.ifPresent(t -> {
+            if(System.currentTimeMillis() - t > MAXIMUM_UPDATE_DELAY) {
+                broadcastUpdate();
+            }
+        });
     }
 
 
@@ -83,8 +122,15 @@ public class Unit extends Targetable {
         this.buildingTask = new BuildingTask(buildingType);
     }
 
+    public void requireUpdate() {
+        if(! needsUpdateSince.isPresent()) {
+            needsUpdateSince = Optional.of(System.currentTimeMillis());
+        }
+    }
+
     public void broadcastUpdate() {
         PlayerManager.broadcastPlayers(new UpdateUnitMessage(this.getUnitID(), this.getPos(), this.getVel(), this.getDest(), this.getHp()));
+        needsUpdateSince = Optional.empty();
     }
 
     @Override
@@ -97,7 +143,7 @@ public class Unit extends Targetable {
     public float getRadius() {return (float)Math.sqrt(2) / 2f * this.getSize();}
 
     public Vector getCenter() {
-        return pos.add(new Vector(0.5f, 0.5f));
+        return pos.add(new Vector(this.getSize() / 2.0f, this.getSize() / 2.0f));
     }
 
 
