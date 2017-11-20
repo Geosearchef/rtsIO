@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Player {
 
@@ -111,6 +112,11 @@ public class Player {
 
                 break;
             }
+
+            case "ping": {
+                this.send(new LatencyReply(((Number)message.get("t")).longValue()));
+                break;
+            }
         }
     }
 
@@ -150,10 +156,10 @@ public class Player {
         this.send(new LoginSuccessMessage(this.username, this.playerID));
 
         this.sendGameInfo();
-        for(int i = 0;i < 10;i++) {
+        IntStream.range(0, 10).forEach(i -> {
             Game.addUnit(new Unit(this, 0, new Vector(50, 50), 100));
             Game.addUnit(new Unit(this, 0, new Vector(52, 52), 100));
-        }
+        });
 
         if(! Main.PRODUCTION)
             this.setResourceAmount(200);

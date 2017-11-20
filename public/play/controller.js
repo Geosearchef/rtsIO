@@ -55,6 +55,8 @@ function update(d) {
             }
         }
     });
+
+    Latency.update();
 }
 
 

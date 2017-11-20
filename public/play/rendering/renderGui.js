@@ -28,6 +28,8 @@ function renderGui() {
     renderResourceAmount();
 
     renderBuildingButtons();
+
+    renderNetworkStats();
 }
 
 
@@ -44,4 +46,13 @@ function renderBuildingButtons() {
     for(var i = 0;i < buildingData.length;i++) {
         ctx.drawImage(buildingIcons[i], buildingButtons[i].x, buildingButtons[i].y, buildingButtons[i].width, buildingButtons[i].height);
     }
+}
+
+
+function renderNetworkStats() {
+    ctx.font = "14px Consolas";
+    ctx.textAlign = "left";
+    ctx.fillStyle = "black";
+    ctx.fillText("LAT: " + Math.round(Latency.mediumLatency), canvas.width - 120, 20);
+    ctx.fillText("JIT: " + Math.round(Latency.jitter), canvas.width - 120, 35);
 }
