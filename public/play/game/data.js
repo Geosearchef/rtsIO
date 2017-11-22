@@ -36,4 +36,5 @@ function Building(playerID, buildingID, buildingType, pos, hp, inBuildingProcess
     this.inBuildingProcess = inBuildingProcess;
 
     this.getSize = function() {return 1.0;};
+    this.getCenter = () => this.pos.add(new Vector(this.getSize() / 2, this.getSize() / 2));
 }

@@ -52,12 +52,12 @@ public class Player {
         System.out.println(message.toJSONString());
         switch((String)message.get("type")) {
             case "moveUnits": {
-                JSONArray unitIDArray = (JSONArray) message.get("unitIDs");
+                JSONArray  unitIDArray = (JSONArray) message.get("unitIDs");
                 HashSet<Integer> unitIDs = unitIDArray.stream()
                         .mapToInt(o -> Integer.parseInt(o.toString()))
                         .boxed()
                         .collect(Collectors.toCollection(HashSet::new));
-                
+
                 Vector dest = new Vector((JSONObject) message.get("dest"));
 
                 synchronized (Game.units) {

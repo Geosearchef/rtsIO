@@ -45,6 +45,17 @@ function update(d) {
                 u2.pos.setAdd(force.scale(-1));
             }
         });
+
+
+        buildings.forEach(building => {
+            var neededDist = building.getSize() / 2 + unit.getRadius();
+            var actualDist = unit.getCenter().sub(building.getCenter()).length();
+
+            if(actualDist < neededDist) {
+                var force = unit.getCenter().sub(building.getCenter()).normaliseOrElse(new Vector(0, 0)).scale(2 * (1.0 - actualDist / neededDist) * d);
+                unit.pos.setAdd(force);
+            }
+        });
     });
 
     buildings.forEach(function(building) {

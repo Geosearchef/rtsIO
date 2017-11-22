@@ -12,45 +12,47 @@ import de.geosearchef.rtsIO.util.Vector;
 @lombok.Data
 public class Building extends Targetable {
 
-    private static float BUILDING_PROCESS_HP_PER_SECOND = 10.0f;//also in js
+	private static float BUILDING_PROCESS_HP_PER_SECOND = 10.0f;//also in js
 
-    private Player player;
-    private int buildingID;
-    private int buildingType;
-    private Vector pos;
-    private boolean inBuildingProcess;
+	private Player player;
+	private int buildingID;
+	private int buildingType;
+	private Vector pos;
+	private boolean inBuildingProcess;
 
-    public Building(Player player, int buildingType, Vector pos) {
-        super(Data.getBuildingData(buildingType).getMaxHp());
+	public Building(Player player, int buildingType, Vector pos) {
+		super(Data.getBuildingData(buildingType).getMaxHp());
 
-        this.player = player;
-        this.buildingType = buildingType;
-        this.pos = pos;
+		this.player = player;
+		this.buildingType = buildingType;
+		this.pos = pos;
 
-        this.buildingID = IDFactory.generateBuildingID();
-        this.inBuildingProcess = true;
+		this.buildingID = IDFactory.generateBuildingID();
+		this.inBuildingProcess = true;
 
-        this.setHp(1.0f);
-    }
-
-
-    public void update(float d) {
-        if(inBuildingProcess) {
-            this.setHp(this.getHp() + d * BUILDING_PROCESS_HP_PER_SECOND);
-            if(this.getHp() > Data.getBuildingData(buildingType).getMaxHp()) {
-                this.setHp(Data.getBuildingData(buildingType).getMaxHp());
-                this.inBuildingProcess = false;
-                broadcastUpdate();
-            }
-        }
-    }
-
-    public void broadcastUpdate() {
-        PlayerManager.broadcastPlayers(new UpdateBuildingMessage(this.getBuildingID(), this.getHp(), this.isInBuildingProcess()));
-    }
+		this.setHp(1.0f);
+	}
 
 
-    public float getCost() {
-        return Data.getBuildingData(this.buildingType).getCost();
-    }
+	public void update(float d) {
+		if(inBuildingProcess) {
+			this.setHp(this.getHp() + d * BUILDING_PROCESS_HP_PER_SECOND);
+			if(this.getHp() > Data.getBuildingData(buildingType).getMaxHp()) {
+				this.setHp(Data.getBuildingData(buildingType).getMaxHp());
+				this.inBuildingProcess = false;
+				broadcastUpdate();
+			}
+		}
+	}
+
+	public void broadcastUpdate() {
+		PlayerManager.broadcastPlayers(new UpdateBuildingMessage(this.getBuildingID(), this.getHp(), this.isInBuildingProcess()));
+	}
+
+
+	public float getCost() {
+		return Data.getBuildingData(this.buildingType).getCost();
+	}
+	public float getSize() {return 1.0f;}
+	public Vector getCenter() {return this.pos.add(new Vector(getSize() / 2f, getSize() / 2f));}
 }
