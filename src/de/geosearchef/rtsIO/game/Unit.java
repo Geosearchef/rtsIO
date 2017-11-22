@@ -88,7 +88,7 @@ public class Unit extends Targetable {
 				.forEach(p -> {
 					float neededDist = p.getFirst().getRadius() + Unit.this.getRadius();
 					if(p.getSecond() < neededDist - UNIT_COLLISION_IGNORE_DIST) {
-						Vector force = this.getCenter().sub(p.getFirst().getCenter()).normaliseOrElse(new Vector((float)Math.random() - 0.5f, (float)Math.random() - 0.5f).normalise()).scale(2f * (1.0f - p.getSecond() / neededDist) * d);
+						Vector force = this.getCenter().sub(p.getFirst().getCenter()).normaliseOrElse(new Vector((float)Math.random() - 0.5f, (float)Math.random() - 0.5f).normaliseOr1()).scale(2f * (1.0f - p.getSecond() / neededDist) * d);
 						this.pos = this.pos.add(force);
 						p.getFirst().pos = p.getFirst().pos.add(force.scale(-1f));
 
@@ -104,7 +104,7 @@ public class Unit extends Targetable {
 					.forEach(p -> {
 						float neededDist = p.getFirst().getSize() / 2f + Unit.this.getRadius();
 						if(p.getSecond() < neededDist - UNIT_COLLISION_IGNORE_DIST) {
-							Vector force = this.getCenter().sub(p.getFirst().getCenter()).normaliseOrElse(new Vector((float)Math.random() - 0.5f, (float)Math.random() - 0.5f).normalise()).scale(2f * (1.0f - p.getSecond() / neededDist) * d);
+							Vector force = this.getCenter().sub(p.getFirst().getCenter()).normaliseOrElse(new Vector((float)Math.random() - 0.5f, (float)Math.random() - 0.5f).normaliseOr1()).scale(2f * (1.0f - p.getSecond() / neededDist) * d);
 							this.pos = this.pos.add(force);
 
 							this.requireUpdate();
