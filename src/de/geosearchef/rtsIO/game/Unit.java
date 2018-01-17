@@ -60,8 +60,14 @@ public class Unit extends Targetable {
 				this.pos = new Vector(this.dest);
 
 				if(buildingTask != null) {
+					//Check resources
+					boolean enoughResources = this.player.removeResources(Data.getBuildingData(buildingTask.buildingType).getCost());
+
 					//Create new building
-					Game.addBuilding(new Building(this.getPlayer(), this.buildingTask.buildingType, new Vector(this.dest)));
+
+					if(enoughResources) {
+						Game.addBuilding(new Building(this.getPlayer(), this.buildingTask.buildingType, new Vector(this.dest)));
+					}
 					buildingTask = null;
 				}
 

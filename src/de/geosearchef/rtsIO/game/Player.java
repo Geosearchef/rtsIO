@@ -1,6 +1,7 @@
 package de.geosearchef.rtsIO.game;
 
 import de.geosearchef.rtsIO.Main;
+import de.geosearchef.rtsIO.js.Data;
 import de.geosearchef.rtsIO.json.*;
 import de.geosearchef.rtsIO.json.gems.NewGemMessage;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
@@ -50,6 +51,8 @@ public class Player {
 
     public void onMessage(JSONObject message) {
         System.out.println(message.toJSONString());
+
+        parse:
         switch((String)message.get("type")) {
             case "moveUnits": {
                 JSONArray  unitIDArray = (JSONArray) message.get("unitIDs");
@@ -75,10 +78,15 @@ public class Player {
                 Vector pos = new Vector((JSONObject) message.get("pos"));
                 int buildingType = ((Long)message.get("typeID")).intValue();
 
-                //TODO: check building typeID
-                //TODO: check resources
+                if(! Data.hasBuildingData(buildingType)) {
+                    break;
+                }
 
-                //TODO: synchronize?? so no update can change during checks
+                synchronized (this) {
+                    if(this.resourceAmount < Data.getBuildingData(buildingType).getCost()) {
+                        break parse;
+                    }
+                }
 
                 JSONArray unitIDArray = (JSONArray) message.get("unitIDs");
                 HashSet<Integer> unitIDs = unitIDArray.stream()
@@ -124,7 +132,7 @@ public class Player {
 
 
     public void addResources(double amount) {setResourceAmount(this.resourceAmount + amount);}
-    public void removeResources(double amount) {setResourceAmount(this.resourceAmount - amount);}
+    public synchronized boolean removeResources(double amount) {if (this.resourceAmount >= amount) {setResourceAmount(this.resourceAmount - amount);return true;} else {return false;}}
     public void setResourceAmount(double amount) {
         this.resourceAmount = amount;
         this.sendResourceAmount();
