@@ -14,7 +14,11 @@ function renderBuildings() {
 function renderBuildingMode() {
     if(buildingModeTypeID != -1) {
         var buildingModePos = screenToMapSpace(currentMousePos);
+        if (ownResourceAmount < buildingData[buildingModeTypeID].cost) {
+            ctx.filter = "blur(3px)";
+        }
         ctx.drawImage(buildingIcons[buildingModeTypeID], (buildingModePos.x - 0.5) * CELL_SCALE, (buildingModePos.y - 0.5) * CELL_SCALE, CELL_SCALE, CELL_SCALE);//TODO: dynamic width of buildings in js
+        ctx.filter = "blur(0px)";
     }
 }
 

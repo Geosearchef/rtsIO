@@ -22,7 +22,7 @@ public class Main {
         if(args.length > 0 && Objects.equals(args[0], "debug"))
             PRODUCTION = false;
 
-        //Configure slf4j to use stdout instead of stderr, TODO: does not work
+        //Configure slf4j to use stdout instead of stderr, TODO: does not work, production build?
         System.setProperty("org.slf4j.simpleLogger.logFile", "System.out");
         Logger logger = LoggerFactory.getLogger("rtsIO");
         if(!PRODUCTION)
