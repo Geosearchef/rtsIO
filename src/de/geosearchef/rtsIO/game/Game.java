@@ -27,6 +27,7 @@ public class Game {
     public static Set<Unit> units = new HashSet<Unit>();
     public static Set<Gem> gems = new HashSet<Gem>();
     public static Set<Building> buildings = new HashSet<Building>();
+    public static Set<Projectile> projectiles = new HashSet<>();
 
 
     public static void addUnit(Unit unit) {

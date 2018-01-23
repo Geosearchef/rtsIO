@@ -153,6 +153,26 @@ public class Unit extends Targetable {
 		needsUpdateSince = Optional.empty();
 	}
 
+	public void damage(float amount) {
+		this.setHp(this.hp - amount);
+		if(this.hp <= 0) {
+			synchronized (Game.units) {
+				Game.units.remove(this);
+			}
+			this.broadcastUpdate();
+		}
+	}
+
+	@Override
+	public String getTargetType() {
+		return "unit";
+	}
+
+	@Override
+	public int getTargetID() {
+		return this.getUnitID();
+	}
+
 	@Override
 	public int hashCode() {
 		return unitID;

@@ -4,6 +4,7 @@ import de.geosearchef.rtsIO.game.buildings.Building;
 import de.geosearchef.rtsIO.game.gems.Gem;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class Updater {
@@ -32,6 +33,19 @@ public class Updater {
         synchronized (Game.buildings) {
             for(Building building : Game.buildings) {
                 building.update(d);
+            }
+        }
+
+        synchronized (Game.projectiles) {
+            for(Projectile projectile : Game.projectiles) {
+                projectile.update(d);
+            }
+
+            Iterator<Projectile> iter = Game.projectiles.iterator();
+            while(iter.hasNext()) {
+                if(iter.next().isDestroyed()) {
+                    iter.remove();
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ public class IDFactory {
     private static int currentUnitID;
     private static int currentGemID;
     private static int currentBuildingID;
+    private static long currentProjectileID;
 
 
     public static synchronized int generatePlayerID() {
@@ -17,4 +18,5 @@ public class IDFactory {
         return currentGemID++;
     }
     public static synchronized int generateBuildingID() {return currentBuildingID++;}
+    public static synchronized long generateProjectileID() {return currentProjectileID++;}
 }

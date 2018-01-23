@@ -1,6 +1,7 @@
 package de.geosearchef.rtsIO.game.buildings;
 
 import de.geosearchef.rtsIO.IDFactory;
+import de.geosearchef.rtsIO.game.Game;
 import de.geosearchef.rtsIO.game.Player;
 import de.geosearchef.rtsIO.game.PlayerManager;
 import de.geosearchef.rtsIO.game.Targetable;
@@ -49,6 +50,23 @@ public class Building extends Targetable {
 		PlayerManager.broadcastPlayers(new UpdateBuildingMessage(this.getBuildingID(), this.getHp(), this.isInBuildingProcess()));
 	}
 
+	public void damage(float amount) {
+		this.setHp(this.hp - amount);
+		if(this.hp <= 0f) {
+			synchronized (Game.buildings) {
+				Game.buildings.remove(this);
+			}
+		}
+		this.broadcastUpdate();
+	}
+
+	public int getTargetID() {
+		return this.getBuildingID();
+	}
+
+	public String getTargetType() {
+		return "building";
+	}
 
 	public float getCost() {
 		return Data.getBuildingData(this.buildingType).getCost();
