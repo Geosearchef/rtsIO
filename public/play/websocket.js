@@ -3,7 +3,7 @@ var socket;
 
 function onSocketMessage(event) {
     var msg = JSON.parse(event.data);
-    //console.log(msg);
+    console.log(msg);
     switch (msg.type) {
         case "loginSuccess":
             ownUsername = msg.username;
@@ -56,6 +56,14 @@ function onSocketMessage(event) {
             onDeleteBuilding(msg.buildingID);
             break;
 
+        case "newProjectile":
+            onNewProjectile(msg);
+            break;
+
+        case "deleteProjectile":
+            onDeleteProjectile(msg);
+            break;
+
         case "resourceAmountUpdate":
             ownResourceAmount = msg.resourceAmount;
             break;
@@ -63,6 +71,9 @@ function onSocketMessage(event) {
         case "pong":
             Latency.onPongReceived(msg);
             break;
+
+        default:
+            console.error("You probably forgot a break.");
     }
 }
 

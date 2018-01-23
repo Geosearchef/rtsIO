@@ -48,6 +48,8 @@ public class Updater {
                 }
             }
         }
+
+
     }
 
     private static long lastFrame = 0;

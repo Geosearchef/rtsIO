@@ -33,6 +33,7 @@ function render(d) {
     renderBuildings();
     renderGems();
     renderUnits();
+    renderProjectiles();
 
     renderOverlay();
 

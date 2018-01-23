@@ -38,3 +38,12 @@ function Building(playerID, buildingID, buildingType, pos, hp, inBuildingProcess
     this.getSize = function() {return 1.0;};
     this.getCenter = () => this.pos.add(new Vector(this.getSize() / 2, this.getSize() / 2));
 }
+
+function Projectile(playerID, projectileID, projectileType, pos, vel, target) {
+    this.playerID = playerID;
+    this.projectileID = projectileID;
+    this.projectileType = projectileType;
+    this.pos = pos;
+    this.vel = vel;
+    this.target = target;
+}

@@ -16,6 +16,7 @@ var players = new Map();
 var units = new Map();
 var gems = new Map();
 var buildings = new Map();
+var projectiles = new Map();
 
 
 
@@ -65,6 +66,11 @@ function update(d) {
                 building.hp = building.maxHp;
             }
         }
+    });
+
+    projectiles.forEach(function(projectile) {
+       projectile.vel = projectile.target.pos.sub(projectile.pos).normalise();
+       projectile.pos.setAdd(projectile.vel.scale(d));
     });
 
     Latency.update();
@@ -118,6 +124,23 @@ function onUpdateBuilding(msg) {
 
 function onDeleteBuilding(buildingID) {
     buildings.delete(buildingID);
+}
+
+function onNewProjectile(msg) {
+    var target;
+    if(msg.targetType == "unit") {
+        target = units.get(msg.targetID);
+    } else if(msg.targetType == "building") {
+        target = buildings.get(msg.targetID);
+    } else {
+        console.error("Undefined target type");
+    }
+    var projectile = new Projectile(msg.playerOD, msg.projectileID, msg.projectileType, msg.pos, msg.vel, target);
+    projectiles.set(projectile.projectileID, projectile);
+}
+
+function onDeleteProjectile(msg) {
+    projectiles.delete(msg.projectileID);
 }
 
 

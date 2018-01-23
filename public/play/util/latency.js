@@ -25,9 +25,4 @@ Latency.onPongReceived = function(m) {
 
     Latency.mediumLatency = Latency.history.reduce(function(a, b) {return a + b;}) / Latency.history.length;
     Latency.jitter = Latency.history.reduce(function(a, b) { return Math.max(Math.abs(Latency.mediumLatency - b), a); }, 0);
-
-
-
-    console.log("Latency: " + Latency.mediumLatency);
-    console.log("Jitter: " + Latency.jitter);
 };

@@ -1,6 +1,8 @@
 package de.geosearchef.rtsIO.game;
 
 import de.geosearchef.rtsIO.IDFactory;
+import de.geosearchef.rtsIO.game.buildings.Building;
+import de.geosearchef.rtsIO.json.projectiles.DeleteProjectileMessage;
 import de.geosearchef.rtsIO.json.projectiles.NewProjectileMessage;
 import de.geosearchef.rtsIO.util.Vector;
 import lombok.Data;
@@ -31,6 +33,11 @@ public class Projectile {
     public void update(float d) {
 
         if(this.target != null) {
+            if(((target instanceof Unit) && !Game.units.contains(((Unit)target))) || ((target instanceof Building) && !Game.units.contains(((Building)target)))) {
+                this.destroy();
+                return;
+            }
+
             Vector toTarget = target.getPos().sub(this.pos);
             this.vel = toTarget.normalise();
 
@@ -38,6 +45,7 @@ public class Projectile {
                 //Hit
                 target.damage(directDamage);
                 this.destroy();
+                return;
             }
         }
 
@@ -45,7 +53,7 @@ public class Projectile {
     }
 
     private void destroy() {
-        destroyed = false;
-        //send destroy
+        destroyed = true;
+        PlayerManager.broadcastPlayers(new DeleteProjectileMessage(this.projectileID));
     }
 }
