@@ -16,6 +16,7 @@ public class JSCombiner {
             "game/data.js",
             "game/unitData.js",
             "game/buildingData.js",
+            "game/projectileData.js",
             "rendering/renderGui.js",
             "rendering/renderUnits.js",
             "rendering/renderBuildings.js",

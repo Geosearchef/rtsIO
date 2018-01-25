@@ -10,7 +10,7 @@ public abstract class Targetable {
 
     protected float hp;
 
-    public abstract void damage(float amount);
+    public abstract void damage(float amount, Player source);
     public abstract Vector getPos();
     public abstract String getTargetType();
     public abstract int getTargetID();

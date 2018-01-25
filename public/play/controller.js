@@ -70,7 +70,7 @@ function update(d) {
 
     projectiles.forEach(function(projectile) {
        projectile.vel = projectile.target.pos.sub(projectile.pos).normalise();
-       projectile.pos.setAdd(projectile.vel.scale(d));
+       projectile.pos.setAdd(projectile.vel.scale(d * projectileData[projectile.projectileType].speed));
     });
 
     Latency.update();

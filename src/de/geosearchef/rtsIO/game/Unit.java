@@ -153,7 +153,7 @@ public class Unit extends Targetable {
 		needsUpdateSince = Optional.empty();
 	}
 
-	public void damage(float amount) {
+	public void damage(float amount, Player source) {
 		this.setHp(this.hp - amount);
 		if(this.hp <= 0) {
 			synchronized (Game.units) {

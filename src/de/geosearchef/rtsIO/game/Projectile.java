@@ -2,12 +2,13 @@ package de.geosearchef.rtsIO.game;
 
 import de.geosearchef.rtsIO.IDFactory;
 import de.geosearchef.rtsIO.game.buildings.Building;
+import de.geosearchef.rtsIO.js.Data;
+import de.geosearchef.rtsIO.js.ProjectileData;
 import de.geosearchef.rtsIO.json.projectiles.DeleteProjectileMessage;
 import de.geosearchef.rtsIO.json.projectiles.NewProjectileMessage;
 import de.geosearchef.rtsIO.util.Vector;
-import lombok.Data;
 
-@Data
+@lombok.Data
 public class Projectile {
 
     private long projectileID;
@@ -16,16 +17,14 @@ public class Projectile {
     private Vector pos;
     private Vector vel;
     private Targetable target;
-    private int directDamage;
 
     private boolean destroyed = false;
 
-    public Projectile(Player player, Vector pos, Vector vel, Targetable target, int directDamage) {
+    public Projectile(Player player, Vector pos, Vector vel, Targetable target) {
         this.projectileID = IDFactory.generateProjectileID();
         this.pos = pos;
         this.vel = vel;
         this.target = target;
-        this.directDamage = directDamage;
 
         PlayerManager.broadcastPlayers(new NewProjectileMessage(player.getPlayerID(), projectileID, projectileType, pos, vel, target.getTargetType(), target.getTargetID()));
     }
@@ -43,17 +42,21 @@ public class Projectile {
 
             if(toTarget.length() <= vel.length() * d) {
                 //Hit
-                target.damage(directDamage);
+                target.damage(getProjectileData().getDamage(), this.getPlayer());
                 this.destroy();
                 return;
             }
         }
 
-        this.pos = this.pos.add(vel.scale(d));
+        this.pos = this.pos.add(vel.scale(d * getProjectileData().getSpeed()));
     }
 
     private void destroy() {
         destroyed = true;
         PlayerManager.broadcastPlayers(new DeleteProjectileMessage(this.projectileID));
+    }
+
+    public ProjectileData getProjectileData() {
+        return Data.getProjectileData(this.projectileType);
     }
 }

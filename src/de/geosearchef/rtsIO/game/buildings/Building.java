@@ -50,7 +50,7 @@ public class Building extends Targetable {
 		PlayerManager.broadcastPlayers(new UpdateBuildingMessage(this.getBuildingID(), this.getHp(), this.isInBuildingProcess()));
 	}
 
-	public void damage(float amount) {
+	public void damage(float amount, Player source) {
 		this.setHp(this.hp - amount);
 		if(this.hp <= 0f) {
 			synchronized (Game.buildings) {
