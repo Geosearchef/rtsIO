@@ -3,7 +3,7 @@ var socket;
 
 function onSocketMessage(event) {
     var msg = JSON.parse(event.data);
-    console.log(msg);
+    // console.log(msg);
     switch (msg.type) {
         case "loginSuccess":
             ownUsername = msg.username;

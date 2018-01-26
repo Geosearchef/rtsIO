@@ -12,8 +12,10 @@ public abstract class Targetable {
 
     public abstract void damage(float amount, Player source);
     public abstract Vector getPos();
+    public abstract Vector getCenter();
     public abstract String getTargetType();
     public abstract int getTargetID();
+    public abstract Player getPlayer();
     //TODO DODODODO
     public float getSize() {
         return 1.0f;

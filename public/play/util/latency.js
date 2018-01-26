@@ -1,5 +1,5 @@
 
-const LATENCY_TEST_DELAY = 250;
+const LATENCY_TEST_DELAY = 1000;
 
 var Latency = {};
 

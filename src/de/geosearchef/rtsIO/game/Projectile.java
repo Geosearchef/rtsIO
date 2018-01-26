@@ -22,25 +22,23 @@ public class Projectile {
 
     public Projectile(Player player, Vector pos, Vector vel, Targetable target) {
         this.projectileID = IDFactory.generateProjectileID();
+        this.player = player;
         this.pos = pos;
         this.vel = vel;
         this.target = target;
-
-        PlayerManager.broadcastPlayers(new NewProjectileMessage(player.getPlayerID(), projectileID, projectileType, pos, vel, target.getTargetType(), target.getTargetID()));
     }
 
     public void update(float d) {
-
         if(this.target != null) {
-            if(((target instanceof Unit) && !Game.units.contains(((Unit)target))) || ((target instanceof Building) && !Game.units.contains(((Building)target)))) {
+            if(((target instanceof Unit) && !Game.units.contains((target))) || ((target instanceof Building) && !Game.buildings.contains((target)))) {
                 this.destroy();
                 return;
             }
-
-            Vector toTarget = target.getPos().sub(this.pos);
+            //TODO: division by zero?
+            Vector toTarget = target.getCenter().sub(this.pos);
             this.vel = toTarget.normalise();
 
-            if(toTarget.length() <= vel.length() * d) {
+            if(toTarget.length() <= getProjectileData().getSpeed() * d) {
                 //Hit
                 target.damage(getProjectileData().getDamage(), this.getPlayer());
                 this.destroy();
@@ -53,10 +51,14 @@ public class Projectile {
 
     private void destroy() {
         destroyed = true;
-        PlayerManager.broadcastPlayers(new DeleteProjectileMessage(this.projectileID));
     }
 
     public ProjectileData getProjectileData() {
         return Data.getProjectileData(this.projectileType);
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (this.projectileID % Integer.MAX_VALUE);
     }
 }

@@ -4,11 +4,13 @@ import de.geosearchef.rtsIO.IDFactory;
 import de.geosearchef.rtsIO.game.buildings.Building;
 import de.geosearchef.rtsIO.game.gems.Gem;
 import de.geosearchef.rtsIO.js.Data;
+import de.geosearchef.rtsIO.js.UnitData;
 import de.geosearchef.rtsIO.json.units.UpdateUnitMessage;
 import de.geosearchef.rtsIO.util.Pair;
 import de.geosearchef.rtsIO.util.Vector;
 
 import javax.xml.bind.UnmarshallerHandler;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +28,8 @@ public class Unit extends Targetable {
 	private Vector vel;
 	private Vector dest;//Not nullable, only matters when vel != 0
 	private BuildingTask buildingTask = null;
+	private Targetable target = null;
+	private long nextAttack = 0;
 
 	//Server sided
 	private Optional<Long> needsUpdateSince = Optional.empty(); //e.g. after a collision
@@ -118,10 +122,40 @@ public class Unit extends Targetable {
 					});
 		}
 
+		Collection<Targetable> targetables = Game.getTargetables();
+		if(target != null && (! targetables.contains(target) || target.getPos().sub(this.pos).lengthSquared() > this.getUnitData().getAttackRange() * this.getUnitData().getAttackRange())) {
+			target = null;
+		}
+
+		if(target == null && this.getUnitData().getProjectile() != -1) {
+			checkForTarget(targetables);
+		}
+
+
+		if(target != null && System.currentTimeMillis() >= this.nextAttack) {
+			//attack
+ 			Game.addProjectile(new Projectile(this.player, this.getCenter(), new Vector(), this.target));
+			this.nextAttack = System.currentTimeMillis() + this.getUnitData().getAttackCooldown();//DOES NOT compensate lag
+		}
+
 		needsUpdateSince.ifPresent(t -> {
 			if(System.currentTimeMillis() - t > MAXIMUM_UPDATE_DELAY) {
 				broadcastUpdate();
 			}
+		});
+	}
+
+	//TODO: decrease scan rate
+	public void checkForTarget(Collection<Targetable> targetables) {
+		//TODO: rasterize????
+		Optional<Targetable> newTarget = targetables.stream()
+				.filter(t -> t.getPlayer() != this.getPlayer())
+				.map(t -> new Pair<Targetable, Float>(t, this.getCenter().sub(t.getCenter()).lengthSquared()))
+				.filter(t -> t.getSecond() <= this.getUnitData().getAttackRange() * this.getUnitData().getAttackRange())
+				.min((l, r) -> (int) (l.getSecond() - r.getSecond())).map(t -> t.getFirst());
+
+		newTarget.ifPresent(t -> {
+			this.target = t;
 		});
 	}
 
@@ -155,11 +189,9 @@ public class Unit extends Targetable {
 
 	public void damage(float amount, Player source) {
 		this.setHp(this.hp - amount);
+		this.broadcastUpdate();
 		if(this.hp <= 0) {
-			synchronized (Game.units) {
-				Game.units.remove(this);
-			}
-			this.broadcastUpdate();
+			Game.removeUnit(this);
 		}
 	}
 
@@ -187,6 +219,9 @@ public class Unit extends Targetable {
 		return pos.add(new Vector(this.getSize() / 2.0f, this.getSize() / 2.0f));
 	}
 
+	public UnitData getUnitData() {
+		return Data.getUnitData(this.unitType);
+	}
 
 	@lombok.Data
 	public static class BuildingTask {

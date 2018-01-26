@@ -11,4 +11,7 @@ public class UnitData {
     private String[] files;
     private float maxHp;
     private float movementSpeed;
+    private int projectile;
+    private int attackCooldown;
+    private float attackRange;
 }

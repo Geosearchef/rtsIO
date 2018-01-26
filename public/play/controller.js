@@ -29,7 +29,7 @@ function update(d) {
             unit.vel = new Vector(0, 0);
             unit.pos = cloneVector(unit.dest);
         } else {
-            unit.pos.setAdd(travel);
+            unit.pos.setAdd(travel);//TODO: update vel
         }
 
         //Unit collision
@@ -69,8 +69,17 @@ function update(d) {
     });
 
     projectiles.forEach(function(projectile) {
-       projectile.vel = projectile.target.pos.sub(projectile.pos).normalise();
-       projectile.pos.setAdd(projectile.vel.scale(d * projectileData[projectile.projectileType].speed));
+        var toTarget = projectile.target.getCenter().sub(projectile.pos);
+
+        if(toTarget.lengthSquared() == 0 || toTarget.lengthSquared() <= d * projectileData[projectile.projectileType].speed) {
+            projectile.vel = new Vector(0, 0);
+            projectile.pos.set(projectile.target.pos);
+            projectiles.delete(projectile.projectileID);
+        } else {
+            projectile.vel = toTarget.normalise();
+        }
+
+        projectile.pos.setAdd(projectile.vel.scale(d * projectileData[projectile.projectileType].speed));
     });
 
     Latency.update();
@@ -135,7 +144,7 @@ function onNewProjectile(msg) {
     } else {
         console.error("Undefined target type");
     }
-    var projectile = new Projectile(msg.playerOD, msg.projectileID, msg.projectileType, msg.pos, msg.vel, target);
+    var projectile = new Projectile(msg.playerID, msg.projectileID, msg.projectileType, cloneVector(msg.pos), cloneVector(msg.vel), target);
     projectiles.set(projectile.projectileID, projectile);
 }
 

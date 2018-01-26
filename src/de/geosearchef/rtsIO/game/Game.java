@@ -6,17 +6,17 @@ import de.geosearchef.rtsIO.json.buildings.DeleteBuildingMessage;
 import de.geosearchef.rtsIO.json.buildings.NewBuildingMessage;
 import de.geosearchef.rtsIO.json.gems.DeleteGemMessage;
 import de.geosearchef.rtsIO.json.gems.NewGemMessage;
+import de.geosearchef.rtsIO.json.projectiles.DeleteProjectileMessage;
+import de.geosearchef.rtsIO.json.projectiles.NewProjectileMessage;
 import de.geosearchef.rtsIO.json.units.DeleteUnitMessage;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
 import de.geosearchef.rtsIO.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Game {
 
@@ -74,6 +74,20 @@ public class Game {
         PlayerManager.broadcastPlayers(new DeleteBuildingMessage(building.getBuildingID()));
     }
 
+    public static void addProjectile(Projectile projectile) {
+        synchronized (projectiles) {
+            projectiles.add(projectile);
+        }
+        PlayerManager.broadcastPlayers(new NewProjectileMessage(projectile.getPlayer().getPlayerID(), projectile.getProjectileID(), projectile.getProjectileType(), projectile.getPos(), projectile.getVel(), projectile.getTarget().getTargetType(), projectile.getTarget().getTargetID()));
+    }
+
+    public static void removeProjectile(Projectile projectile) {
+        synchronized (projectiles) {
+            projectiles.remove(projectile);
+        }
+        PlayerManager.broadcastPlayers(new DeleteProjectileMessage(projectile.getProjectileID()));
+    }
+
 
     public static void init() {
         Gem.generateGemSpawners();
@@ -90,5 +104,9 @@ public class Game {
         synchronized (units) {
             return units.stream().filter(u -> u.getPlayer() == player).collect(Collectors.toList());
         }
+    }
+
+    public static Collection<Targetable> getTargetables() {
+        return Stream.concat(units.stream(), buildings.stream()).collect(Collectors.toCollection(HashSet::new));
     }
 }

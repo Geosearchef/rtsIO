@@ -2,10 +2,12 @@ package de.geosearchef.rtsIO.game;
 
 import de.geosearchef.rtsIO.game.buildings.Building;
 import de.geosearchef.rtsIO.game.gems.Gem;
+import de.geosearchef.rtsIO.json.projectiles.DeleteProjectileMessage;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Updater {
 
@@ -41,12 +43,17 @@ public class Updater {
                 projectile.update(d);
             }
 
-            Iterator<Projectile> iter = Game.projectiles.iterator();
-            while(iter.hasNext()) {
-                if(iter.next().isDestroyed()) {
-                    iter.remove();
-                }
-            }
+//            Iterator<Projectile> iter = Game.projectiles.iterator();
+//            while(iter.hasNext()) {
+//                Projectile projectile = iter.next();
+//                if(projectile.isDestroyed()) {
+//                    PlayerManager.broadcastPlayers(new DeleteProjectileMessage(projectile.getProjectileID()));
+//                    iter.remove();
+//                }
+//            }
+            Game.projectiles.stream()
+                    .filter(Projectile::isDestroyed).collect(Collectors.toCollection(HashSet::new))
+                    .forEach(Game::removeProjectile);
         }
 
 
