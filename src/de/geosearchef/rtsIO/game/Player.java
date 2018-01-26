@@ -165,7 +165,7 @@ public class Player {
         this.send(new LoginSuccessMessage(this.username, this.playerID));
 
         this.sendGameInfo();
-        IntStream.range(0, 10).forEach(i -> {
+        IntStream.range(0, 1).forEach(i -> {
             Game.addUnit(new Unit(this, 0, new Vector(50, 50), 100));
             Game.addUnit(new Unit(this, 0, new Vector(52, 52), 100));
         });
