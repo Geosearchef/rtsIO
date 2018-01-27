@@ -6,6 +6,15 @@ function renderBuildings() {
 
     buildings.forEach(function (building) {
         ctx.drawImage(buildingIcons[building.buildingType], building.pos.x * CELL_SCALE, building.pos.y * CELL_SCALE, CELL_SCALE, CELL_SCALE);
+
+        //render health bar
+        if(building.hp < buildingData[building.buildingType].maxHp) {
+            ctx.fillStyle = "red";
+            ctx.fillRect(building.pos.x * CELL_SCALE, (building.pos.y - 0.20) * CELL_SCALE, CELL_SCALE, 0.1 * CELL_SCALE);
+            ctx.fillStyle = "green";
+            ctx.fillRect(building.pos.x * CELL_SCALE, (building.pos.y - 0.20) * CELL_SCALE, building.getSize() * CELL_SCALE * (building.hp / buildingData[building.buildingType].maxHp), 0.1 * CELL_SCALE);
+            ctx.fillStyle = "black";
+        }
     });
 
     renderBuildingMode();

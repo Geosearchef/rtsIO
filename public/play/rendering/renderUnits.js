@@ -25,6 +25,15 @@ function renderUnits() {
         if(unit.selected) {
             ctx.drawImage(selectionIcon, unit.pos.x * CELL_SCALE, unit.pos.y * CELL_SCALE, CELL_SCALE, CELL_SCALE);
         }
+
+        //render health bar
+        if(unit.hp < unitData[unit.unitType].maxHp) {
+            ctx.fillStyle = "red";
+            ctx.fillRect(unit.pos.x * CELL_SCALE, (unit.pos.y - 0.20) * CELL_SCALE, CELL_SCALE, 0.1 * CELL_SCALE);
+            ctx.fillStyle = "green";
+            ctx.fillRect(unit.pos.x * CELL_SCALE, (unit.pos.y - 0.20) * CELL_SCALE, unit.getSize() * CELL_SCALE * (unit.hp / unitData[unit.unitType].maxHp), 0.1 * CELL_SCALE);
+            ctx.fillStyle = "black";
+        }
     });
 }
 

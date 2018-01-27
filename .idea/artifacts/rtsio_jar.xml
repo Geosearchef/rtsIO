@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="rtsio:jar">
-    <output-path>$PROJECT_DIR$/../../Desktop</output-path>
+    <output-path>$USER_HOME$/Desktop</output-path>
     <root id="archive" name="rtsio.jar">
       <element id="module-output" name="rtsio_main" />
       <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-common/9.4.4.v20170414/25ba998831e8db6aae2a712217af19effb43d83d/websocket-common-9.4.4.v20170414.jar" path-in-jar="/" />
