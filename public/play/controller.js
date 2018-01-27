@@ -24,12 +24,21 @@ var projectiles = new Map();
 function update(d) {
     units.forEach(function(unit) {
         //Unit movement
+        if(unit.vel.lengthSquared() > 0) {
+            var toDest = unit.dest.sub(unit.pos);
+            if(toDest.lengthSquared() != 0) {
+                unit.vel = toDest.normalise().scale(unitData[unit.unitType].movementSpeed);
+            } else {
+                unit.vel = new Vector(0, 0);
+            }
+        }
+
         var travel = unit.vel.scale(d);
-        if(travel.lengthSquared() >= unit.pos.sub(unit.dest).lengthSquared()) {
+        if(unit.vel.lengthSquared() > 0 && travel.lengthSquared() >= unit.pos.sub(unit.dest).lengthSquared()) {
             unit.vel = new Vector(0, 0);
             unit.pos = cloneVector(unit.dest);
         } else {
-            unit.pos.setAdd(travel);//TODO: update vel
+            unit.pos.setAdd(travel);
         }
 
         //Unit collision
