@@ -53,11 +53,10 @@ public class Building extends Targetable {
 	public void damage(float amount, Player source) {
 		this.setHp(this.hp - amount);
 		if(this.hp <= 0f) {
-			synchronized (Game.buildings) {
-				Game.buildings.remove(this);
-			}
+			Game.removeBuilding(this);
+		} else {
+			this.broadcastUpdate();
 		}
-		this.broadcastUpdate();
 	}
 
 	public int getTargetID() {

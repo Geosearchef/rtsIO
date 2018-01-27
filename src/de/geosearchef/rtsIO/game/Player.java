@@ -3,6 +3,7 @@ package de.geosearchef.rtsIO.game;
 import de.geosearchef.rtsIO.Main;
 import de.geosearchef.rtsIO.js.Data;
 import de.geosearchef.rtsIO.json.*;
+import de.geosearchef.rtsIO.json.buildings.NewBuildingMessage;
 import de.geosearchef.rtsIO.json.gems.NewGemMessage;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
 import de.geosearchef.rtsIO.util.Pair;
@@ -189,6 +190,10 @@ public class Player {
         //Send all units to this player
         synchronized (Game.units) {
             Game.units.forEach(u -> this.send(new NewUnitMessage(u.getPlayer().getPlayerID(), u.getUnitID(), u.getUnitType(), u.getPos(), u.getVel(), u.getDest(), u.getHp())));
+        }
+
+        synchronized (Game.buildings) {
+            Game.buildings.forEach(b -> this.send(new NewBuildingMessage(b.getPlayer().getPlayerID(), b.getBuildingID(), b.getBuildingType(), b.getPos(), b.getHp(), b.isInBuildingProcess())));
         }
 
         //Send all gems to this player
