@@ -180,8 +180,23 @@ function moveUnits(dest) {
 }
 
 function createBuilding(pos, typeID) {
+    if(intersectsAnyBuilding(pos, typeID)) {
+        return;
+    }
+
     var unitIDs = getSelectedUnitIDs();
     send({type: "createBuilding", typeID: typeID, pos: pos, unitIDs: unitIDs});
+}
+
+function buildingsIntersect(pos1, typeID1, pos2, typeID2) {
+    return ! (pos1.x > pos2.x + getBuildingSize(typeID2)
+            || pos2.x > pos1.x + getBuildingSize(typeID1)
+            || pos1.y > pos2.y + getBuildingSize(typeID2)
+            || pos2.y > pos1.y + getBuildingSize(typeID1));
+}
+
+function intersectsAnyBuilding(pos, typeID) {
+    return Array.from(buildings.values()).some(b => buildingsIntersect(pos, typeID, b.pos, b.buildingType));
 }
 
 

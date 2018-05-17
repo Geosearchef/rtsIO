@@ -13,3 +13,4 @@ Util.getParameterByName = function (name, url) {
     //TODO: if parameter not present, uncaught
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+

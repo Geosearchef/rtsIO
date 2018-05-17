@@ -8,16 +8,18 @@ import de.geosearchef.rtsIO.json.gems.NewGemMessage;
 import de.geosearchef.rtsIO.json.units.NewUnitMessage;
 import de.geosearchef.rtsIO.util.Pair;
 import de.geosearchef.rtsIO.util.Vector;
+import de.geosearchef.rtsIO.websocket.WebSocket;
 import lombok.Getter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import de.geosearchef.rtsIO.websocket.WebSocket;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -165,7 +167,7 @@ public class Player {
         this.send(new LoginSuccessMessage(this.username, this.playerID));
 
         this.sendGameInfo();
-        IntStream.range(0, 1).forEach(i -> {
+        IntStream.range(0, 20).forEach(i -> {
             Game.addUnit(new Unit(this, 0, new Vector(50, 50), 100));
             Game.addUnit(new Unit(this, 0, new Vector(52, 52), 100));
         });

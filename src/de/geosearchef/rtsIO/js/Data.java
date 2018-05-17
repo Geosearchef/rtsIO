@@ -1,8 +1,6 @@
 package de.geosearchef.rtsIO.js;
 
 import com.google.gson.Gson;
-import de.geosearchef.rtsIO.game.Projectile;
-import de.geosearchef.rtsIO.game.Unit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -51,10 +49,16 @@ public class Data {
 
         json.append(scan.nextLine().split(" = ")[1]);
         while(scan.hasNextLine()) {
-            json.append(scan.nextLine());
+            String line = scan.nextLine();
+            json.append(line);
             json.append(" ");
+
+            if(line.endsWith(";")) {
+                break;
+            }
         }
         json.append("}");
+
         return (JSONArray) ((JSONObject)new JSONParser().parse(json.toString().replace(";", ""))).get("data");
     }
 

@@ -5,3 +5,7 @@ var buildingData = [
     {"name": "Turret", "files": ["turret.svg"], "maxHp": 120, "cost": 100},
 
 ];
+
+function getBuildingSize(typeID) {
+    return 1.0;
+}

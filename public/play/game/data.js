@@ -13,9 +13,9 @@ function Unit(playerID, unitID, unitType, pos, vel, dest, hp) {
     this.dest = dest;
     this.hp = hp;
 
-    this.getSize = function() {return 1.0;};
-    this.getRadius = function () {return SQRT2 / 2.0 * this.getSize();};
-    this.getCenter = function () {return this.pos.add(new Vector(this.getSize() / 2.0, this.getSize() / 2.0));};
+    this.getSize = function() { return getUnitSize(unitType); };
+    this.getRadius = function () { return SQRT2 / 2.0 * this.getSize(); };
+    this.getCenter = function () { return this.pos.add(new Vector(this.getSize() / 2.0, this.getSize() / 2.0)); };
 
     if(ownPlayerID === playerID)
         this.selected = true;
@@ -35,7 +35,7 @@ function Building(playerID, buildingID, buildingType, pos, hp, inBuildingProcess
     this.hp = hp;
     this.inBuildingProcess = inBuildingProcess;
 
-    this.getSize = function() {return 1.0;};
+    this.getSize = function() { return getUnitSize(buildingType); };
     this.getCenter = () => this.pos.add(new Vector(this.getSize() / 2, this.getSize() / 2));
 }
 

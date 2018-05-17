@@ -5,3 +5,7 @@ var unitData = [
     {"name": "Artillery", "files": ["artyBody.svg", "artyTurret.svg"], "maxHp": 120, "movementSpeed": 0.8, "projectile": -1},
 
 ];
+
+function getUnitSize(typeID) {
+    return 1.0;
+}

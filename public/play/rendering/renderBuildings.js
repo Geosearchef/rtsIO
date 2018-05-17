@@ -23,7 +23,8 @@ function renderBuildings() {
 function renderBuildingMode() {
     if(buildingModeTypeID != -1) {
         var buildingModePos = screenToMapSpace(currentMousePos);
-        if (ownResourceAmount < buildingData[buildingModeTypeID].cost) {
+        if (ownResourceAmount < buildingData[buildingModeTypeID].cost
+            || intersectsAnyBuilding(buildingModePos.sub(new Vector(0.5, 0.5)), buildingModeTypeID)) {
             ctx.filter = "blur(3px)";
         }
         ctx.drawImage(buildingIcons[buildingModeTypeID], (buildingModePos.x - 0.5) * CELL_SCALE, (buildingModePos.y - 0.5) * CELL_SCALE, CELL_SCALE, CELL_SCALE);//TODO: dynamic width of buildings in js
