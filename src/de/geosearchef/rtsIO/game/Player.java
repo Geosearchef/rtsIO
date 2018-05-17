@@ -1,6 +1,7 @@
 package de.geosearchef.rtsIO.game;
 
 import de.geosearchef.rtsIO.Main;
+import de.geosearchef.rtsIO.game.buildings.Building;
 import de.geosearchef.rtsIO.js.Data;
 import de.geosearchef.rtsIO.json.*;
 import de.geosearchef.rtsIO.json.buildings.NewBuildingMessage;
@@ -82,6 +83,10 @@ public class Player {
                 int buildingType = ((Long)message.get("typeID")).intValue();
 
                 if(! Data.hasBuildingData(buildingType)) {
+                    break;
+                }
+
+                if(Game.buildings.stream().anyMatch(b -> b.intersects(pos, Building.getSize(buildingType)))) {
                     break;
                 }
 

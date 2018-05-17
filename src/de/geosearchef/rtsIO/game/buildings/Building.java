@@ -5,7 +5,6 @@ import de.geosearchef.rtsIO.game.Game;
 import de.geosearchef.rtsIO.game.Player;
 import de.geosearchef.rtsIO.game.PlayerManager;
 import de.geosearchef.rtsIO.game.Targetable;
-import de.geosearchef.rtsIO.js.BuildingData;
 import de.geosearchef.rtsIO.js.Data;
 import de.geosearchef.rtsIO.json.buildings.UpdateBuildingMessage;
 import de.geosearchef.rtsIO.util.Vector;
@@ -59,6 +58,16 @@ public class Building extends Targetable {
 		}
 	}
 
+	public boolean intersects(Vector pos2, float size2) {
+		return ! (pos.getX() > pos2.getX() + size2
+				|| pos2.getX() > pos.getX() + this.getSize()
+				|| pos.getY() > pos2.getY() + size2
+				|| pos2.getY() > pos.getY() + this.getSize());
+	}
+	public boolean intersects(Building building) {
+		return  intersects(building.pos, building.getSize());
+	}
+
 	public int getTargetID() {
 		return this.getBuildingID();
 	}
@@ -70,6 +79,11 @@ public class Building extends Targetable {
 	public float getCost() {
 		return Data.getBuildingData(this.buildingType).getCost();
 	}
-	public float getSize() {return 1.0f;}
+	public float getSize() {
+		return getSize(this.buildingType);
+	}
+	public static float getSize(int type) {
+		return 1.0f;
+	}
 	public Vector getCenter() {return this.pos.add(new Vector(getSize() / 2f, getSize() / 2f));}
 }
