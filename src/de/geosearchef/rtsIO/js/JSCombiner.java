@@ -24,7 +24,8 @@ public class JSCombiner {
             "rendering/renderGems.js",
             "gui/button.js",
             "util/latency.js",
-            "rendering/renderProjectiles.js"
+            "rendering/renderProjectiles.js",
+            "rendering/renderEntityLists.js",
     };
 
     private static String combineJS() throws FileNotFoundException {

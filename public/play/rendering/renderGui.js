@@ -29,6 +29,9 @@ function renderGui() {
 
     renderBuildingButtons();
 
+    renderBuildingList();
+    renderUnitList();
+
     renderNetworkStats();
 }
 
